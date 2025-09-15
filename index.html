@@ -444,10 +444,12 @@
             /* Network graph mobile responsiveness */
             .research-tabs {
                 flex-direction: column;
+                gap: 0.25rem;
             }
 
             .tab-btn {
-                padding: 0.75rem 1rem;
+                padding: 0.5rem 1rem;
+                text-align: center;
             }
 
             .network-controls {
@@ -538,7 +540,7 @@
             margin: 0;
         }
 
-        .filter-buttons {
+        .filter-buttons, .center-buttons {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
@@ -583,6 +585,34 @@
             box-shadow: 0 0 0 2px hsl(var(--ring));
         }
 
+        #quick-center-dropdown {
+            padding: 0.5rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) - 2px);
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-size: 0.9rem;
+            width: 200px;
+            cursor: pointer;
+        }
+
+        #quick-center-dropdown:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 2px hsl(var(--ring));
+        }
+
+        #quick-center-dropdown optgroup {
+            font-weight: 600;
+            color: hsl(var(--muted-foreground));
+            background: hsl(var(--muted));
+        }
+
+        #quick-center-dropdown option {
+            padding: 0.25rem 0.5rem;
+            color: hsl(var(--foreground));
+        }
+
         #timeline-slider {
             width: 150px;
             margin-right: 0.5rem;
@@ -604,6 +634,9 @@
             border: 1px solid hsl(var(--border));
             border-radius: var(--radius);
             background: hsl(var(--background));
+            min-height: 750px;
+            width: 100%;
+            display: block;
         }
 
         .entity-panel {
@@ -710,6 +743,7 @@
             text-anchor: middle;
             pointer-events: none;
         }
+
     </style>
 </head>
 <body>
@@ -727,8 +761,8 @@
 
         <!-- Research Tabs Navigation -->
         <div class="research-tabs">
-            <button class="tab-btn active" onclick="switchTab('research')">📄 Research</button>
-            <button class="tab-btn" onclick="switchTab('network')">🕸️ Network Graph</button>
+            <button class="tab-btn active" onclick="switchTab('research', this)">📄 Research</button>
+            <button class="tab-btn" onclick="switchTab('network', this)">🕸️ Network Graph</button>
         </div>
 
         <!-- Research Content Tab -->
@@ -2106,7 +2140,7 @@
             <div class="network-controls">
                 <div class="control-group">
                     <h3>🔍 Search & Filter</h3>
-                    <input type="text" id="search-input" placeholder="Search entities..." onkeyup="searchEntities()">
+                    <input type="text" id="search-input" placeholder="Search entities... (Enter to center)" onkeyup="searchEntities(event)" onkeydown="if(event.key==='Enter') searchEntities(event)">
                     <div class="filter-buttons">
                         <button class="filter-btn active" onclick="filterByType('all')">All</button>
                         <button class="filter-btn" onclick="filterByType('person')">People</button>
@@ -2121,9 +2155,55 @@
                     <span id="timeline-value">2024</span>
                 </div>
                 <div class="control-group">
+                    <h3>🎯 Quick Center</h3>
+                    <select id="quick-center-dropdown" onchange="handleQuickCenter(this.value)">
+                        <option value="">📍 Select entity to center...</option>
+                        <optgroup label="👥 Key People">
+                            <option value="dylan-field">Dylan Field (CEO/Founder)</option>
+                            <option value="evan-wallace">Evan Wallace (CTO/Co-founder)</option>
+                            <option value="peter-thiel">Peter Thiel (Mentor)</option>
+                            <option value="danny-rimer">Danny Rimer (Index Ventures)</option>
+                            <option value="john-lilly">John Lilly (Greylock)</option>
+                            <option value="peter-skomoroch">Peter Skomoroch (Early Investor)</option>
+                            <option value="sho-kuwamoto">Sho Kuwamoto (Advisor)</option>
+                            <option value="shantanu-narayen">Shantanu Narayen (Adobe CEO)</option>
+                            <option value="austin-rief">Austin Rief (Morning Brew)</option>
+                            <option value="alex-lieberman">Alex Lieberman (Morning Brew)</option>
+                        </optgroup>
+                        <optgroup label="🏢 Companies">
+                            <option value="figma">Figma (The Company)</option>
+                            <option value="adobe">Adobe (Acquisition Attempt)</option>
+                            <option value="linkedin">LinkedIn (Internship)</option>
+                            <option value="flipboard">Flipboard (Internship)</option>
+                            <option value="microsoft">Microsoft (Internship)</option>
+                            <option value="oreilly-media">O'Reilly Media</option>
+                            <option value="morning-brew">Morning Brew</option>
+                        </optgroup>
+                        <optgroup label="💰 Investors">
+                            <option value="index-ventures">Index Ventures (Seed Lead)</option>
+                            <option value="greylock-partners">Greylock Partners (Series A)</option>
+                            <option value="sequoia-capital">Sequoia Capital (Growth)</option>
+                            <option value="kleiner-perkins">Kleiner Perkins</option>
+                            <option value="thiel-fellowship">Thiel Fellowship (Program)</option>
+                        </optgroup>
+                        <optgroup label="🎓 Education & Places">
+                            <option value="brown-university">Brown University</option>
+                            <option value="technology-high-school">Technology High School</option>
+                            <option value="penngrove">Penngrove, California</option>
+                            <option value="santa-rosa-memorial">Santa Rosa Memorial Hospital</option>
+                            <option value="thomas-page-elementary">Thomas Page Elementary</option>
+                        </optgroup>
+                        <optgroup label="📅 Events">
+                            <option value="config-conference">Config Conference</option>
+                            <option value="figma-beta-launch">Figma Beta Launch 2015</option>
+                            <option value="figma-public-launch">Figma Public Launch 2016</option>
+                            <option value="adobe-deal-termination">Adobe Deal Termination 2023</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="control-group">
                     <h3>⚙️ Graph Controls</h3>
                     <button onclick="resetGraph()">Reset View</button>
-                    <button onclick="centerOnDylan()">Center Dylan</button>
                     <button onclick="exportGraph()">Export PNG</button>
                 </div>
             </div>
@@ -2144,8 +2224,65 @@
 
     <!-- D3.js Library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- Network Data -->
-    <script src="network-data.js"></script>
+    
+    <!-- Load Network Data with fetch to ensure it loads -->
+    <script>
+        // INLINE NETWORK DATA - GUARANTEED TO WORK
+        window.dylanFieldNetworkData = {
+            "nodes": [
+                {"id": "dylan-field", "name": "Dylan Field", "type": "person", "category": "founder", "size": 100, "color": "#3b82f6"},
+                {"id": "evan-wallace", "name": "Evan Wallace", "type": "person", "category": "founder", "size": 85, "color": "#3b82f6"},
+                {"id": "peter-thiel", "name": "Peter Thiel", "type": "person", "category": "mentor", "size": 90, "color": "#8b5cf6"},
+                {"id": "danny-rimer", "name": "Danny Rimer", "type": "person", "category": "investor", "size": 70, "color": "#f59e0b"},
+                {"id": "john-lilly", "name": "John Lilly", "type": "person", "category": "investor", "size": 70, "color": "#f59e0b"},
+                {"id": "peter-skomoroch", "name": "Peter Skomoroch", "type": "person", "category": "investor", "size": 65, "color": "#f59e0b"},
+                {"id": "sho-kuwamoto", "name": "Sho Kuwamoto", "type": "person", "category": "advisor", "size": 60, "color": "#8b5cf6"},
+                {"id": "shantanu-narayen", "name": "Shantanu Narayen", "type": "person", "category": "executive", "size": 75, "color": "#ef4444"},
+                {"id": "austin-rief", "name": "Austin Rief", "type": "person", "category": "founder", "size": 65, "color": "#3b82f6"},
+                {"id": "alex-lieberman", "name": "Alex Lieberman", "type": "person", "category": "founder", "size": 65, "color": "#3b82f6"},
+                {"id": "figma", "name": "Figma", "type": "company", "category": "company", "size": 95, "color": "#10b981"},
+                {"id": "adobe", "name": "Adobe", "type": "company", "category": "acquirer", "size": 85, "color": "#ef4444"},
+                {"id": "linkedin", "name": "LinkedIn", "type": "company", "category": "internship", "size": 70, "color": "#0ea5e9"},
+                {"id": "flipboard", "name": "Flipboard", "type": "company", "category": "internship", "size": 65, "color": "#0ea5e9"},
+                {"id": "microsoft", "name": "Microsoft", "type": "company", "category": "internship", "size": 80, "color": "#0ea5e9"},
+                {"id": "oreilly-media", "name": "O'Reilly Media", "type": "company", "category": "internship", "size": 60, "color": "#0ea5e9"},
+                {"id": "morning-brew", "name": "Morning Brew", "type": "company", "category": "media", "size": 70, "color": "#f59e0b"},
+                {"id": "index-ventures", "name": "Index Ventures", "type": "company", "category": "investor", "size": 75, "color": "#f59e0b"},
+                {"id": "greylock-partners", "name": "Greylock Partners", "type": "company", "category": "investor", "size": 75, "color": "#f59e0b"},
+                {"id": "sequoia-capital", "name": "Sequoia Capital", "type": "company", "category": "investor", "size": 80, "color": "#f59e0b"},
+                {"id": "kleiner-perkins", "name": "Kleiner Perkins", "type": "company", "category": "investor", "size": 70, "color": "#f59e0b"},
+                {"id": "thiel-fellowship", "name": "Thiel Fellowship", "type": "program", "category": "education", "size": 70, "color": "#8b5cf6"},
+                {"id": "brown-university", "name": "Brown University", "type": "institution", "category": "education", "size": 80, "color": "#06b6d4"},
+                {"id": "technology-high-school", "name": "Technology High School", "type": "institution", "category": "education", "size": 60, "color": "#06b6d4"},
+                {"id": "penngrove", "name": "Penngrove, California", "type": "location", "category": "birthplace", "size": 55, "color": "#84cc16"},
+                {"id": "santa-rosa-memorial", "name": "Santa Rosa Memorial Hospital", "type": "location", "category": "birthplace", "size": 50, "color": "#84cc16"},
+                {"id": "thomas-page-elementary", "name": "Thomas Page Elementary", "type": "institution", "category": "education", "size": 50, "color": "#06b6d4"},
+                {"id": "config-conference", "name": "Config Conference", "type": "event", "category": "conference", "size": 65, "color": "#a855f7"},
+                {"id": "figma-beta-launch", "name": "Figma Beta Launch 2015", "type": "event", "category": "launch", "size": 70, "color": "#a855f7"},
+                {"id": "figma-public-launch", "name": "Figma Public Launch 2016", "type": "event", "category": "launch", "size": 75, "color": "#a855f7"},
+                {"id": "adobe-deal-termination", "name": "Adobe Deal Termination 2023", "type": "event", "category": "business", "size": 80, "color": "#a855f7"}
+            ],
+            "links": [
+                {"source": "dylan-field", "target": "figma", "relationship": "Co-founded", "strength": 1.0},
+                {"source": "evan-wallace", "target": "figma", "relationship": "Co-founded", "strength": 1.0},
+                {"source": "dylan-field", "target": "evan-wallace", "relationship": "Co-founder", "strength": 0.9},
+                {"source": "peter-thiel", "target": "dylan-field", "relationship": "Mentor", "strength": 0.8},
+                {"source": "thiel-fellowship", "target": "dylan-field", "relationship": "Fellow", "strength": 0.8},
+                {"source": "brown-university", "target": "dylan-field", "relationship": "Student", "strength": 0.7},
+                {"source": "brown-university", "target": "evan-wallace", "relationship": "Student", "strength": 0.7},
+                {"source": "index-ventures", "target": "figma", "relationship": "Seed Investment", "strength": 0.8},
+                {"source": "greylock-partners", "target": "figma", "relationship": "Series A", "strength": 0.8},
+                {"source": "sequoia-capital", "target": "figma", "relationship": "Growth Investment", "strength": 0.8},
+                {"source": "adobe", "target": "figma", "relationship": "Acquisition Attempt", "strength": 0.9},
+                {"source": "danny-rimer", "target": "index-ventures", "relationship": "Partner", "strength": 0.8},
+                {"source": "john-lilly", "target": "greylock-partners", "relationship": "Partner", "strength": 0.8},
+                {"source": "dylan-field", "target": "linkedin", "relationship": "Internship", "strength": 0.6},
+                {"source": "dylan-field", "target": "flipboard", "relationship": "Internship", "strength": 0.6},
+                {"source": "config-conference", "target": "figma", "relationship": "Annual Event", "strength": 0.7}
+            ]
+        };
+        console.log("✅ Network data embedded inline:", dylanFieldNetworkData.nodes.length, "nodes");
+    </script>
 
     <script>
         // Interactive highlighting and tooltips
@@ -2229,32 +2366,78 @@
             }
         }
 
-        // Tab Switching Functionality
-        function switchTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
+        // ULTRA SIMPLE Tab Switching
+        function switchTab(tabName, buttonElement) {
+            console.log('Switching to:', tabName);
             
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            // Hide ALL tabs
+            document.getElementById('research-tab').style.display = 'none';
+            document.getElementById('network-tab').style.display = 'none';
             
-            // Show selected tab content
-            document.getElementById(tabName + '-tab').classList.add('active');
+            // Remove active from ALL buttons
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
-            // Add active class to clicked button
-            event.target.classList.add('active');
+            // Show the requested tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
             
-            // Initialize network graph when network tab is selected
-            if (tabName === 'network' && !window.networkGraphInitialized) {
+            // Mark button as active
+            if (buttonElement) {
+                buttonElement.classList.add('active');
+            }
+            
+            // Initialize network graph if needed
+            if (tabName === 'network') {
+                setTimeout(function() {
+                    if (typeof initializeNetworkGraph === 'function') {
+                        initializeNetworkGraph();
+                        window.networkGraphInitialized = true;
+                    }
+                }, 200);
+            }
+            
+            console.log('Tab switched to:', tabName);
+        }
+
+        // Separate function to handle network graph initialization
+        window.initNetworkIfNeeded = function() {
+            if (!window.networkGraphInitialized) {
+                console.log('🚀 Initializing network graph...');
+                console.log('🔍 Data available check:', typeof dylanFieldNetworkData !== 'undefined');
+                if (typeof dylanFieldNetworkData !== 'undefined') {
+                    console.log('📊 Network data nodes:', dylanFieldNetworkData.nodes.length);
+                }
                 setTimeout(() => {
-                    initializeNetworkGraph();
-                    window.networkGraphInitialized = true;
+                    const result = initializeNetworkGraph();
+                    if (result !== false) {
+                        window.networkGraphInitialized = true;
+                        console.log('✅ Network graph initialized successfully');
+                    } else {
+                        console.error('❌ Network graph initialization failed');
+                    }
                 }, 100);
             }
-        }
+        };
+
+        // DEBUG: Test tab functionality manually
+        window.testTabs = function() {
+            console.log("🧪 TESTING TAB FUNCTIONALITY:");
+            
+            // Test Research tab
+            console.log("Testing research tab...");
+            const researchResult = switchTab('research');
+            console.log("Research tab result:", researchResult);
+            
+            setTimeout(() => {
+                // Test Network tab
+                console.log("Testing network tab...");
+                const networkResult = switchTab('network');
+                console.log("Network tab result:", networkResult);
+                
+                if (networkResult) {
+                    setTimeout(() => initNetworkIfNeeded(), 200);
+                }
+            }, 1000);
+        };
 
         // Network Graph Variables
         let simulation, svg, g, nodes, links, node, link, nodeLabels, linkLabels;
@@ -2262,11 +2445,28 @@
         let currentFilter = 'all';
         let currentYear = 2024;
 
-        // Initialize Network Graph
+        // Initialize Network Graph - SIMPLE VERSION
         function initializeNetworkGraph() {
+            console.log("🚀 Initializing network graph...");
+            console.log("📊 Data nodes:", dylanFieldNetworkData.nodes.length);
+            
             const container = d3.select("#network-graph");
-            const containerWidth = container.node().getBoundingClientRect().width;
+            if (container.empty()) {
+                console.error("❌ #network-graph element not found!");
+                return false;
+            }
+            
+            const containerNode = container.node();
+            if (!containerNode) {
+                console.error("❌ Container node is null!");
+                return false;
+            }
+            
+            const containerRect = containerNode.getBoundingClientRect();
+            const containerWidth = containerRect.width || 800;
             const containerHeight = 800;
+            
+            console.log(`📏 Container dimensions: ${containerWidth} x ${containerHeight}`);
             
             const margin = { top: 20, right: 20, bottom: 20, left: 20 };
             const width = containerWidth - margin.left - margin.right;
@@ -2279,6 +2479,8 @@
             svg = container
                 .attr("width", containerWidth)
                 .attr("height", containerHeight);
+            
+            console.log("✅ SVG created:", svg.node());
 
             // Add zoom functionality
             const zoom = d3.zoom()
@@ -2296,12 +2498,14 @@
             nodes = dylanFieldNetworkData.nodes.map(d => ({ ...d }));
             links = dylanFieldNetworkData.links.map(d => ({ ...d }));
 
-            // Create force simulation
+            // Create force simulation with auto-stop
             simulation = d3.forceSimulation(nodes)
-                .force("link", d3.forceLink(links).id(d => d.id).distance(100).strength(0.8))
-                .force("charge", d3.forceManyBody().strength(-300))
+                .force("link", d3.forceLink(links).id(d => d.id).distance(120).strength(0.6))
+                .force("charge", d3.forceManyBody().strength(-400))
                 .force("center", d3.forceCenter(width / 2, height / 2))
-                .force("collision", d3.forceCollide().radius(d => d.size / 2 + 10));
+                .force("collision", d3.forceCollide().radius(d => d.size / 3 + 15))
+                .alphaDecay(0.05) // Faster decay to stop movement sooner
+                .velocityDecay(0.9); // Reduce velocity faster
 
             // Create links
             link = g.append("g")
@@ -2309,7 +2513,7 @@
                 .data(links)
                 .join("line")
                 .attr("class", "link")
-                .attr("stroke-width", d => Math.sqrt(d.strength * 3));
+                .attr("stroke-width", d => Math.max(Math.sqrt(d.strength * 3), 2));
 
             // Create link labels
             linkLabels = g.append("g")
@@ -2325,7 +2529,7 @@
                 .data(nodes)
                 .join("circle")
                 .attr("class", "node")
-                .attr("r", d => d.size / 4)
+                .attr("r", d => Math.max(d.size / 3, 15))
                 .attr("fill", d => d.color)
                 .attr("stroke", "#fff")
                 .call(d3.drag()
@@ -2333,6 +2537,9 @@
                     .on("drag", dragged)
                     .on("end", dragended))
                 .on("click", nodeClicked);
+            
+            console.log("✅ Nodes created:", node.size(), "circles");
+            console.log("🔍 First node sample:", node.datum(), node.attr("r"), node.attr("fill"));
 
             // Create node labels
             nodeLabels = g.append("g")
@@ -2342,6 +2549,10 @@
                 .attr("class", "node-label")
                 .text(d => d.name)
                 .attr("dy", d => d.size / 4 + 15);
+
+            // Track simulation progress for initial centering
+            let tickCount = 0;
+            let hasInitiallyCentered = false;
 
             // Update positions on simulation tick
             simulation.on("tick", () => {
@@ -2362,10 +2573,18 @@
                 nodeLabels
                     .attr("x", d => d.x)
                     .attr("y", d => d.y);
-            });
 
-            // Center on Dylan Field initially
-            setTimeout(() => centerOnDylan(), 1000);
+                // Stop simulation after settling to prevent constant movement
+                tickCount++;
+                if (tickCount > 150 && !hasInitiallyCentered) {
+                    hasInitiallyCentered = true;
+                    console.log("✅ Stopping simulation - graph stabilized");
+                    simulation.stop(); // STOP the simulation completely
+                }
+            });
+            
+            console.log("🎉 initializeNetworkGraph completed successfully");
+            return true;
         }
 
         // Drag functions
@@ -2507,18 +2726,347 @@
             panel.innerHTML = html;
         }
 
-        // Center view on specific node
-        function centerOnNode(nodeData) {
-            const containerWidth = svg.node().getBoundingClientRect().width;
-            const containerHeight = 800;
+        // Enhanced center view on specific node with better animation and feedback
+        function centerOnNode(nodeData, duration = 1000, scale = 1.8) {
+            console.log(`🎯 centerOnNode called with:`, nodeData?.name || 'unknown');
             
-            const scale = 1.5;
-            const x = containerWidth / 2 - nodeData.x * scale;
-            const y = containerHeight / 2 - nodeData.y * scale;
+            if (!nodeData) {
+                console.warn('❌ centerOnNode: nodeData is null/undefined');
+                return false;
+            }
             
+            if (!svg || !svg.node()) {
+                console.warn('❌ centerOnNode: SVG not initialized yet');
+                return false;
+            }
+            
+            // Check if position is valid (not NaN and not 0,0)
+            if (!nodeData.x || !nodeData.y || isNaN(nodeData.x) || isNaN(nodeData.y)) {
+                console.warn(`❌ centerOnNode: Invalid position for ${nodeData.name}: (${nodeData.x}, ${nodeData.y}), retrying...`);
+                // Wait for simulation to position nodes
+                setTimeout(() => centerOnNode(nodeData, duration, scale), 200);
+                return false;
+            }
+            
+            console.log(`✅ Centering on ${nodeData.name} at position (${nodeData.x.toFixed(1)}, ${nodeData.y.toFixed(1)})`);
+            
+            try {
+                const svgRect = svg.node().getBoundingClientRect();
+                const containerWidth = svgRect.width || 800;
+                const containerHeight = svgRect.height || 600;
+                
+                // Calculate center position
+                const x = containerWidth / 2 - nodeData.x * scale;
+                const y = containerHeight / 2 - nodeData.y * scale;
+                
+                console.log(`📍 Calculated center: translate(${x.toFixed(1)}, ${y.toFixed(1)}) scale(${scale})`);
+                
+                // Add visual feedback - highlight the target node
+                highlightCenteringTarget(nodeData);
+                
+                // Apply zoom transform
+                const transform = d3.zoomIdentity.translate(x, y).scale(scale);
+                
+                svg.transition()
+                    .duration(duration)
+                    .ease(d3.easeCubicInOut)
+                    .call(d3.zoom().transform, transform)
+                    .on("start", () => console.log(`🚀 Animation started for ${nodeData.name}`))
+                    .on("end", () => {
+                        console.log(`✅ Animation completed for ${nodeData.name}`);
+                        // Auto-select the centered node after animation
+                        setTimeout(() => {
+                            if (typeof nodeClicked === 'function') {
+                                nodeClicked(null, nodeData);
+                            }
+                        }, 200);
+                    });
+                    
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Error in centerOnNode:', error);
+                return false;
+            }
+        }
+
+        // Center on any entity by name, ID, or search term
+        function centerOnEntity(searchTerm, options = {}) {
+            if (!searchTerm || !nodes) return false;
+            
+            const { 
+                duration = 1000, 
+                scale = 1.8, 
+                exact = false,
+                showNotFound = true 
+            } = options;
+            
+            // Search strategies in order of preference
+            const searchStrategies = [
+                // 1. Exact ID match
+                () => nodes.find(n => n.id === searchTerm.toLowerCase().replace(/\s+/g, '-')),
+                // 2. Exact name match
+                () => nodes.find(n => n.name.toLowerCase() === searchTerm.toLowerCase()),
+                // 3. Name contains search term (if not exact)
+                () => !exact ? nodes.find(n => n.name.toLowerCase().includes(searchTerm.toLowerCase())) : null,
+                // 4. Bio/description contains search term (if not exact)
+                () => !exact ? nodes.find(n => 
+                    (n.bio && n.bio.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (n.description && n.description.toLowerCase().includes(searchTerm.toLowerCase()))
+                ) : null
+            ];
+            
+            let foundNode = null;
+            for (const strategy of searchStrategies) {
+                foundNode = strategy();
+                if (foundNode) break;
+            }
+            
+            if (foundNode) {
+                centerOnNode(foundNode, duration, scale);
+                console.log(`Centered on: ${foundNode.name}`);
+                return true;
+            } else {
+                if (showNotFound) {
+                    console.warn(`Entity not found: "${searchTerm}"`);
+                    showCenteringError(searchTerm);
+                }
+                return false;
+            }
+        }
+
+        // Visual feedback for centering target
+        function highlightCenteringTarget(nodeData) {
+            console.log(`🎨 Highlighting target node: ${nodeData.name}`);
+            
+            if (!nodeData) {
+                console.warn('❌ No nodeData provided for highlighting');
+                return;
+            }
+            
+            if (!node) {
+                console.warn('❌ Node elements not available for highlighting');
+                return;
+            }
+            
+            // Find the visual node element
+            const targetNode = node.filter(d => d.id === nodeData.id);
+            console.log(`🔍 Found ${targetNode.size()} matching node elements for ${nodeData.id}`);
+            
+            if (targetNode.size() === 0) {
+                console.warn(`❌ No visual element found for node ${nodeData.id}`);
+                return;
+            }
+            
+            // Add pulsing highlight effect
+            targetNode
+                .transition()
+                .duration(300)
+                .attr("stroke", "#3b82f6")
+                .attr("stroke-width", 4)
+                .transition()
+                .duration(300)
+                .attr("stroke", "#3b82f6")
+                .attr("stroke-width", 2)
+                .transition()
+                .duration(300)
+                .attr("stroke", "#3b82f6")
+                .attr("stroke-width", 4)
+                .transition()
+                .duration(500)
+                .attr("stroke", nodeData.color || "#666")
+                .attr("stroke-width", 1);
+                
+            console.log(`✅ Applied highlighting to ${nodeData.name}`);
+        }
+
+        // Show error message for centering failures
+        function showCenteringError(searchTerm) {
+            // Create temporary error message
+            const errorDiv = d3.select("#network-graph")
+                .append("div")
+                .style("position", "absolute")
+                .style("top", "20px")
+                .style("right", "20px")
+                .style("background", "#ef4444")
+                .style("color", "white")
+                .style("padding", "8px 12px")
+                .style("border-radius", "4px")
+                .style("font-size", "14px")
+                .style("z-index", "1000")
+                .style("opacity", 0)
+                .text(`Entity not found: "${searchTerm}"`);
+            
+            // Fade in, wait, fade out, remove
+            errorDiv
+                .transition()
+                .duration(200)
+                .style("opacity", 1)
+                .transition()
+                .delay(2000)
+                .duration(500)
+                .style("opacity", 0)
+                .remove();
+        }
+
+        // SIMPLE direct functions for key entities
+        // Auto-centering functions removed to prevent view chaos
+
+        // BRAND NEW dropdown handler - rebuilt from scratch
+        function handleQuickCenter(selectedValue) {
+            if (!selectedValue) return;
+            
+            console.log(`🎯 Centering on: ${selectedValue}`);
+            
+            // Switch to network tab
+            switchTab('network');
+            
+            // Give time for tab to load, then center
+            setTimeout(() => {
+                if (!nodes || nodes.length === 0) {
+                    console.log("Initializing first...");
+                    initializeNetworkGraph();
+                    setTimeout(() => centerOnEntity(selectedValue), 1000);
+                } else {
+                    centerOnEntity(selectedValue);
+                }
+            }, 300);
+        }
+        
+        // Execute the actual centering
+        function executeCenter(selectedValue) {
+            console.log(`🚀 Executing center for: ${selectedValue}`);
+            
+            // DEBUG: Show all available nodes
+            if (nodes && nodes.length > 0) {
+                console.log(`📋 Available nodes (${nodes.length}):`, nodes.map(n => n.id).sort());
+            } else {
+                console.error("❌ No nodes available!");
+                return;
+            }
+            
+            // Find the node in the current simulation
+            let targetNode = nodes.find(n => n.id === selectedValue);
+            
+            if (!targetNode) {
+                console.warn(`❌ Node "${selectedValue}" not found in simulation`);
+                console.log("🔍 Similar IDs:", nodes.filter(n => n.id.includes(selectedValue.split('-')[0])).map(n => n.id));
+                return;
+            }
+            
+            console.log(`✅ Found node: ${targetNode.name} at (${targetNode.x}, ${targetNode.y})`);
+            
+            // Check if SVG exists
+            if (!svg || !svg.node()) {
+                console.error("❌ SVG not available");
+                return;
+            }
+            
+            // Get SVG dimensions
+            const svgElement = svg.node();
+            const rect = svgElement.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height;
+            
+            console.log(`📐 SVG dimensions: ${width} x ${height}`);
+            
+            // Calculate center position with dramatic zoom
+            const zoomLevel = 4.0; // Very dramatic zoom
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            const translateX = centerX - (targetNode.x * zoomLevel);
+            const translateY = centerY - (targetNode.y * zoomLevel);
+            
+            console.log(`🎯 Transform: translate(${translateX}, ${translateY}) scale(${zoomLevel})`);
+            
+            // IMMEDIATE visual feedback - make the node VERY obvious
+            if (node) {
+                // Reset all nodes first
+                node.attr("stroke", "#666")
+                    .attr("stroke-width", 1)
+                    .attr("opacity", 0.3);
+                    
+                // Highlight target node dramatically
+                node.filter(d => d.id === selectedValue)
+                    .attr("stroke", "#ff0000")
+                    .attr("stroke-width", 8)
+                    .attr("opacity", 1)
+                    .attr("r", d => (d.size || 50) / 2); // Make it bigger
+                    
+                console.log(`🔴 Highlighted ${selectedValue} with red border`);
+            }
+            
+            // Apply the zoom transform with animation
             svg.transition()
-                .duration(750)
+                .duration(1200)
+                .ease(d3.easeCubicOut)
+                .call(d3.zoom().transform, d3.zoomIdentity.translate(translateX, translateY).scale(zoomLevel))
+                .on("end", () => {
+                    console.log(`✅ Centering completed for ${targetNode.name}`);
+                    
+                    // Flash the node for extra visibility
+                    if (node) {
+                        const target = node.filter(d => d.id === selectedValue);
+                        target.transition().duration(200)
+                            .attr("r", d => (d.size || 50) / 1.5)
+                            .transition().duration(200)
+                            .attr("r", d => (d.size || 50) / 3)
+                            .transition().duration(200)
+                            .attr("r", d => (d.size || 50) / 2);
+                    }
+                });
+                
+            // DO NOT reset the dropdown - let it stay selected
+            console.log("✅ Centering function completed - dropdown stays selected");
+        }
+
+        // STABLE centering function - no simulation restart
+        function centerOnEntity(entityId) {
+            console.log(`🎯 STABLE CENTER: ${entityId}`);
+            
+            if (!nodes || !svg) {
+                console.error("❌ Network not ready");
+                return;
+            }
+            
+            // Find the node
+            const targetNode = nodes.find(n => n.id === entityId);
+            if (!targetNode) {
+                console.error(`❌ Entity ${entityId} not found in ${nodes.length} nodes`);
+                console.log("Available IDs:", nodes.map(n => n.id).sort());
+                return;
+            }
+            
+            console.log(`✅ Found: ${targetNode.name}`);
+            
+            // Get current positions (no simulation restart)
+            const svgElement = svg.node();
+            const rect = svgElement.getBoundingClientRect();
+            const scale = 2.0; // Reduced zoom to be less jarring
+            const x = rect.width / 2 - targetNode.x * scale;
+            const y = rect.height / 2 - targetNode.y * scale;
+            
+            // Smooth centering without restarting simulation
+            svg.transition()
+                .duration(1200)
+                .ease(d3.easeCubicInOut)
                 .call(d3.zoom().transform, d3.zoomIdentity.translate(x, y).scale(scale));
+                
+            // Gentle highlight
+            if (node) {
+                node.style("opacity", 0.6);
+                node.filter(d => d.id === entityId)
+                    .style("opacity", 1)
+                    .attr("stroke", "#ff4444")
+                    .attr("stroke-width", 4);
+                    
+                setTimeout(() => {
+                    node.style("opacity", 1).attr("stroke", "#fff").attr("stroke-width", 2);
+                }, 3000);
+            }
+            
+            console.log(`✅ Smoothly centered on ${targetNode.name}`);
         }
 
         // Filter functions
@@ -2603,19 +3151,38 @@
         }
 
         // Search function
-        function searchEntities() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        function searchEntities(event) {
+            const searchInput = document.getElementById('search-input');
+            const searchTerm = searchInput.value.toLowerCase();
             
             if (!node) return;
             
-            if (searchTerm === '') {
-                // Reset all nodes
-                node.style("opacity", 1);
-                nodeLabels.style("opacity", 1);
-                link.style("opacity", 0.6);
-                linkLabels.style("opacity", 1);
+            // Handle Enter key for centering
+            if (event && event.key === 'Enter') {
+                if (searchTerm.trim() !== '') {
+                    const success = centerOnEntity(searchTerm.trim());
+                    if (success) {
+                        // Clear search on successful center
+                        setTimeout(() => {
+                            searchInput.value = '';
+                            resetSearchHighlights();
+                        }, 1000);
+                    }
+                }
                 return;
             }
+            
+            if (searchTerm === '') {
+                resetSearchHighlights();
+                return;
+            }
+            
+            // Find all matching nodes
+            const matchingNodes = nodes.filter(d => 
+                d.name.toLowerCase().includes(searchTerm) ||
+                (d.bio && d.bio.toLowerCase().includes(searchTerm)) ||
+                (d.description && d.description.toLowerCase().includes(searchTerm))
+            );
             
             // Highlight matching nodes
             node.style("opacity", d => {
@@ -2631,6 +3198,43 @@
                               (d.description && d.description.toLowerCase().includes(searchTerm));
                 return matches ? 1 : 0.2;
             });
+            
+            // Auto-center on exact match
+            if (matchingNodes.length === 1) {
+                setTimeout(() => {
+                    centerOnNode(matchingNodes[0], 750, 1.5);
+                }, 300);
+            }
+            
+            // Show search results count
+            updateSearchResultsCount(matchingNodes.length, searchTerm);
+        }
+
+        function resetSearchHighlights() {
+            if (!node) return;
+            
+            // Reset all nodes
+            node.style("opacity", 1);
+            nodeLabels.style("opacity", 1);
+            link.style("opacity", 0.6);
+            linkLabels.style("opacity", 1);
+            
+            // Clear search results count
+            updateSearchResultsCount(0, '');
+        }
+
+        function updateSearchResultsCount(count, searchTerm) {
+            const searchInput = document.getElementById('search-input');
+            if (!searchInput) return;
+            
+            // Update placeholder with results
+            if (count > 0 && searchTerm) {
+                searchInput.placeholder = `${count} result${count > 1 ? 's' : ''} found for "${searchTerm}"`;
+            } else if (searchTerm && count === 0) {
+                searchInput.placeholder = `No results for "${searchTerm}"`;
+            } else {
+                searchInput.placeholder = "Search entities... (Enter to center)";
+            }
         }
 
         // Utility functions
@@ -2657,17 +3261,6 @@
             applyFilters();
         }
 
-        function centerOnDylan() {
-            const dylanNode = nodes ? nodes.find(n => n.id === 'dylan-field') : null;
-            if (dylanNode) {
-                centerOnNode(dylanNode);
-                
-                // Auto-select Dylan
-                setTimeout(() => {
-                    updateEntityPanel(dylanNode);
-                }, 100);
-            }
-        }
 
         function exportGraph() {
             if (!svg) return;
@@ -2691,6 +3284,200 @@
             
             img.src = "data:image/svg+xml;base64," + btoa(svgData);
         }
+
+        // GLOBAL CENTERING HELPERS - Available in browser console
+        // Usage examples:
+        // centerDylan() - Centers on Dylan Field
+        // centerEntity("Evan Wallace") - Centers on any entity by name
+        // findEntity("figma") - Lists all entities matching "figma"
+        // allEntities() - Lists all entity names
+
+        window.centerDylan = () => centerOnEntity("Dylan Field", { scale: 2.0 });
+        window.centerEntity = (name, options = {}) => centerOnEntity(name, options);
+        
+        window.findEntity = (searchTerm) => {
+            if (!window.dylanFieldNetworkData) return [];
+            return window.dylanFieldNetworkData.nodes
+                .filter(n => 
+                    n.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (n.bio && n.bio.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (n.description && n.description.toLowerCase().includes(searchTerm.toLowerCase()))
+                )
+                .map(n => ({ id: n.id, name: n.name, type: n.type }));
+        };
+        
+        window.allEntities = () => {
+            if (!window.dylanFieldNetworkData) return [];
+            return window.dylanFieldNetworkData.nodes
+                .map(n => ({ id: n.id, name: n.name, type: n.type, category: n.category }))
+                .sort((a, b) => a.name.localeCompare(b.name));
+        };
+        
+        // Debug dropdown options vs actual entities
+        window.debugDropdown = () => {
+            if (!window.dylanFieldNetworkData) {
+                console.warn("Network data not loaded yet");
+                return;
+            }
+            
+            const dropdownValues = [
+                'dylan-field', 'evan-wallace', 'peter-thiel', 'danny-rimer', 'john-lilly', 'peter-skomoroch',
+                'figma', 'adobe', 'linkedin', 'flipboard', 'microsoft',
+                'index-ventures', 'greylock-partners', 'sequoia-capital', 'thiel-fellowship',
+                'brown-university', 'technology-high-school'
+            ];
+            
+            const actualIds = window.dylanFieldNetworkData.nodes.map(n => n.id).sort();
+            
+            console.log("🔍 Dropdown vs Actual Entity IDs:");
+            dropdownValues.forEach(id => {
+                const exists = actualIds.includes(id);
+                console.log(`${exists ? '✅' : '❌'} ${id}${exists ? '' : ' (NOT FOUND)'}`);
+            });
+            
+            console.log("\n📋 All available entity IDs:");
+            actualIds.forEach(id => console.log(`  ${id}`));
+        };
+
+        // Debug visual state of network graph
+        window.debugNetworkVisual = () => {
+            console.log("🔍 NETWORK VISUAL DEBUG:");
+            console.log("SVG element:", svg?.node());
+            console.log("SVG dimensions:", svg?.attr("width"), "x", svg?.attr("height"));
+            console.log("Number of nodes in DOM:", document.querySelectorAll('#network-graph circle').length);
+            console.log("Number of links in DOM:", document.querySelectorAll('#network-graph line').length);
+            console.log("Current zoom transform:", svg?.node().__zoom);
+            console.log("Container visibility:", document.getElementById('network-graph-container')?.style.display);
+            console.log("Network tab active:", document.getElementById('network-tab')?.classList.contains('active'));
+            
+            if (nodes) {
+                console.log("Nodes data length:", nodes.length);
+                console.log("First few nodes positions:", nodes.slice(0, 3).map(n => ({
+                    name: n.name, 
+                    x: n.x, 
+                    y: n.y,
+                    id: n.id
+                })));
+            }
+            
+            // Check if circles are actually in the DOM
+            const circles = document.querySelectorAll('#network-graph circle');
+            if (circles.length > 0) {
+                console.log("Sample circle attributes:", {
+                    cx: circles[0].getAttribute('cx'),
+                    cy: circles[0].getAttribute('cy'),
+                    r: circles[0].getAttribute('r'),
+                    fill: circles[0].getAttribute('fill'),
+                    style: circles[0].getAttribute('style')
+                });
+            } else {
+                console.warn("❌ No circles found in DOM!");
+            }
+        };
+
+        // Force network to be visible
+        window.forceNetworkVisible = () => {
+            console.log("🔧 FORCING NETWORK VISIBILITY...");
+            
+            // Make sure network tab is active
+            switchTab('network');
+            
+            // Force container to be visible
+            const container = document.getElementById('network-graph-container');
+            if (container) {
+                container.style.display = 'block';
+                container.style.visibility = 'visible';
+                container.style.opacity = '1';
+                console.log("✅ Network container forced visible");
+            }
+            
+            // Force SVG to be visible
+            const svgElement = document.getElementById('network-graph');
+            if (svgElement) {
+                svgElement.style.display = 'block';
+                svgElement.style.visibility = 'visible';
+                svgElement.style.opacity = '1';
+                console.log("✅ SVG element forced visible");
+            }
+            
+            // Initialize if needed
+            if (!window.networkGraphInitialized) {
+                console.log("🚀 Initializing network graph...");
+                initializeNetworkGraph();
+                window.networkGraphInitialized = true;
+            }
+            
+            setTimeout(() => debugNetworkVisual(), 500);
+        };
+
+        // Force visibility test
+        window.testCenterVisual = () => {
+            console.log("🧪 TESTING VISUAL CENTERING...");
+            
+            // First switch to network tab
+            switchTab('network');
+            
+            setTimeout(() => {
+                // Debug visual state
+                debugNetworkVisual();
+                
+                // Try centering on Dylan
+                if (nodes && nodes.length > 0) {
+                    const dylanNode = nodes.find(n => n.id === 'dylan-field');
+                    if (dylanNode) {
+                        console.log("Found Dylan node:", dylanNode);
+                        
+                        // Force position if not set
+                        if (!dylanNode.x || !dylanNode.y) {
+                            dylanNode.x = 400;
+                            dylanNode.y = 300;
+                            console.log("⚠️ Forced Dylan position to center");
+                        }
+                        
+                        // Simple center without animation first
+                        if (svg) {
+                            const containerWidth = svg.attr("width") || 800;
+                            const containerHeight = svg.attr("height") || 600;
+                            const scale = 2.0;
+                            const x = containerWidth / 2 - dylanNode.x * scale;
+                            const y = containerHeight / 2 - dylanNode.y * scale;
+                            
+                            console.log(`🎯 Centering Dylan at (${dylanNode.x}, ${dylanNode.y}) -> translate(${x}, ${y}) scale(${scale})`);
+                            
+                            // Apply transform immediately (no animation)
+                            svg.call(d3.zoom().transform, d3.zoomIdentity.translate(x, y).scale(scale));
+                        }
+                    } else {
+                        console.warn("Dylan node not found!");
+                    }
+                } else {
+                    console.warn("No nodes available!");
+                }
+            }, 1000);
+        };
+
+        // Debug functions available in console
+        window.listAllEntities = function() {
+            if (nodes && nodes.length > 0) {
+                console.log("📋 All loaded entities:");
+                nodes.forEach(n => console.log(`- ${n.id}: ${n.name} (${n.type})`));
+                return nodes.map(n => ({id: n.id, name: n.name, type: n.type}));
+            } else {
+                console.warn("❌ No nodes loaded yet");
+                return [];
+            }
+        };
+        
+        window.testEntity = function(entityId) {
+            console.log(`🧪 Testing entity: ${entityId}`);
+            handleQuickCenter(entityId);
+        };
+        
+        // SIMPLE page load setup
+        setTimeout(() => {
+            console.log("✅ Dylan Field Research Ready");
+            console.log("🎯 Debug: listAllEntities(), testEntity('entity-id')");
+        }, 1000);
     </script>
 </body>
 </html>

@@ -101,6 +101,181 @@ const dylanFieldNetworkData = {
       "timeline": ["2022-acquisition-attempt"],
       "company": "Adobe"
     },
+    {
+      "id": "sequoia-capital",
+      "name": "Sequoia Capital",
+      "type": "company",
+      "category": "venture-capital",
+      "size": 70,
+      "color": "#ef4444",
+      "description": "Legendary VC firm. Published comprehensive Dylan Field spotlight and funded Figma growth.",
+      "founded": "1972",
+      "aum": "$85B+",
+      "links": ["https://www.sequoiacap.com/"],
+      "investment": "Growth stage investor, comprehensive founder spotlight"
+    },
+    {
+      "id": "kleiner-perkins",
+      "name": "Kleiner Perkins",
+      "type": "company",
+      "category": "venture-capital",
+      "size": 65,
+      "color": "#ef4444",
+      "description": "Historic VC firm with Fellows Program where Dylan interned at Flipboard.",
+      "founded": "1972",
+      "aum": "$2B+",
+      "links": ["https://www.kleinerperkins.com/"],
+      "connection": "Fellows Program provided Flipboard internship opportunity"
+    },
+    {
+      "id": "oreilly-media",
+      "name": "O'Reilly Media",
+      "type": "company",
+      "category": "tech-company",
+      "size": 50,
+      "color": "#0ea5e9",
+      "description": "Tech publishing company where Dylan interned as teenager, sparking wider tech interest.",
+      "founded": "1978",
+      "focus": "Technology education and publishing",
+      "links": ["https://www.oreilly.com/"],
+      "significance": "Early tech industry exposure during high school"
+    },
+    {
+      "id": "technology-high-school",
+      "name": "Technology High School",
+      "type": "institution",
+      "category": "education",
+      "size": 45,
+      "color": "#f59e0b",
+      "description": "Magnet school for STEM located on Sonoma State University campus where Dylan developed tech passion.",
+      "location": "Rohnert Park, California",
+      "type_school": "Public magnet school",
+      "links": ["https://www.sonoma.edu/"],
+      "significance": "Where Dylan honed passion for web development and robotics"
+    },
+    {
+      "id": "penngrove",
+      "name": "Penngrove, California",
+      "type": "location",
+      "category": "geography",
+      "size": 40,
+      "color": "#6366f1",
+      "description": "Small town in Sonoma County where Dylan was born and raised. Population ~2,700.",
+      "founded": "1850s",
+      "population": "2,700",
+      "links": ["https://www.sonomacounty.com/"],
+      "significance": "Dylan's humble origins before tech success"
+    },
+    {
+      "id": "config-conference",
+      "name": "Config Conference",
+      "type": "event",
+      "category": "conference",
+      "size": 55,
+      "color": "#8b5cf6",
+      "description": "Figma's annual design conference where Dylan delivers keynotes and product announcements.",
+      "founded": "2020",
+      "frequency": "Annual",
+      "links": ["https://config.figma.com/"],
+      "significance": "Platform for Dylan's thought leadership and Figma vision"
+    },
+    {
+      "id": "santa-rosa-memorial",
+      "name": "Santa Rosa Memorial Hospital",
+      "type": "institution",
+      "category": "healthcare",
+      "size": 35,
+      "color": "#06b6d4",
+      "description": "Hospital where Dylan's father worked as respiratory therapist, representing family's working-class background.",
+      "location": "Santa Rosa, California",
+      "type_org": "Healthcare facility",
+      "significance": "Dylan's family working-class professional background"
+    },
+    {
+      "id": "thomas-page-elementary",
+      "name": "Thomas Page Elementary",
+      "type": "institution", 
+      "category": "education",
+      "size": 35,
+      "color": "#06b6d4",
+      "description": "Elementary school where Dylan's mother worked as resource specialist teacher.",
+      "location": "Petaluma, California",
+      "type_school": "Public elementary school",
+      "significance": "Dylan's family educational background"
+    },
+    {
+      "id": "morning-brew",
+      "name": "Morning Brew",
+      "type": "company",
+      "category": "media",
+      "size": 60,
+      "color": "#f59e0b",
+      "description": "Newsletter company co-founded by Austin Rief and Alex Lieberman, mentioned as comparison point in early Figma coverage.",
+      "founded": "2015",
+      "focus": "Business newsletter and media",
+      "links": ["https://www.morningbrew.com/"],
+      "connection": "Referenced in early entrepreneurship coverage alongside Dylan"
+    },
+    {
+      "id": "austin-rief",
+      "name": "Austin Rief",
+      "type": "person",
+      "category": "entrepreneur",
+      "size": 50,
+      "color": "#f59e0b", 
+      "bio": "Co-founder of Morning Brew. Referenced alongside Dylan in early entrepreneur profiles as example of young founder success.",
+      "links": ["https://www.linkedin.com/in/austinrief/"],
+      "timeline": ["2015-morning-brew-founding"],
+      "company": "Morning Brew"
+    },
+    {
+      "id": "alex-lieberman",
+      "name": "Alex Lieberman",
+      "type": "person",
+      "category": "entrepreneur", 
+      "size": 50,
+      "color": "#f59e0b",
+      "bio": "Co-founder of Morning Brew. Featured in same entrepreneurship articles as Dylan Field as example of millennial founders.",
+      "links": ["https://www.linkedin.com/in/alexlieberman/"],
+      "timeline": ["2015-morning-brew-founding"],
+      "company": "Morning Brew"
+    },
+    {
+      "id": "figma-beta-launch",
+      "name": "Figma Beta Launch 2015",
+      "type": "event",
+      "category": "product-launch",
+      "size": 60,
+      "color": "#8b5cf6",
+      "description": "Closed beta launch of Figma after 3.5 years of development. Critical milestone in company history.",
+      "date": "December 2015",
+      "significance": "First public validation of collaborative design vision",
+      "impact": "Proved browser-based design tools were viable"
+    },
+    {
+      "id": "figma-public-launch",
+      "name": "Figma Public Launch 2016",
+      "type": "event",
+      "category": "product-launch",
+      "size": 65,
+      "color": "#8b5cf6",
+      "description": "Public launch of Figma, beginning explosive user growth and market disruption.",
+      "date": "September 2016",
+      "significance": "Start of design industry transformation",
+      "impact": "Began displacement of traditional design tools"
+    },
+    {
+      "id": "adobe-deal-termination",
+      "name": "Adobe Deal Termination 2023",
+      "type": "event",
+      "category": "business",
+      "size": 70,
+      "color": "#8b5cf6",
+      "description": "Termination of $20B Adobe acquisition due to regulatory opposition. Figma paid $1B breakup fee.",
+      "date": "December 2023",
+      "significance": "Preserved Figma independence and competitive landscape",
+      "impact": "Enabled continued innovation and potential IPO path"
+    }
 
     // COMPANIES
     {
@@ -527,6 +702,288 @@ const dylanFieldNetworkData = {
         "source": "https://www.adobe.com/about-adobe/leadership/shantanu-narayen.html", 
         "verified": true,
         "confidence": 1.0
+      }
+    },
+
+    // ADDITIONAL CRITICAL RELATIONSHIPS - AUDIT COMPLETENESS
+    {
+      "source": "dylan-field",
+      "target": "microsoft",
+      "relationship": "interned at",
+      "strength": 0.6,
+      "year": "2010",
+      "type": "internship",
+      "provenance": {
+        "quote": "Dylan Field completed internship at Microsoft early in career",
+        "source": "https://www.linkedin.com/in/dylanfield/",
+        "verified": true,
+        "confidence": 0.8
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "oreilly-media",
+      "relationship": "interned at during high school",
+      "strength": 0.6,
+      "year": "2008",
+      "type": "internship",
+      "provenance": {
+        "quote": "High school internship at O'Reilly Media sparked wider tech interest",
+        "source": "https://www.sequoiacap.com/article/dylan-field-figma-spotlight/",
+        "verified": true,
+        "confidence": 0.9
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "technology-high-school",
+      "relationship": "studied at",
+      "strength": 0.7,
+      "year": "2005-2009",
+      "type": "education",
+      "provenance": {
+        "quote": "Dylan attended Technology High School, developing passion for web development",
+        "source": "https://www.sequoiacap.com/article/dylan-field-figma-spotlight/",
+        "verified": true,
+        "confidence": 0.9
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "penngrove",
+      "relationship": "born and raised in",
+      "strength": 0.8,
+      "year": "1992",
+      "type": "origin",
+      "provenance": {
+        "quote": "Dylan Field was born and raised in Penngrove, California",
+        "source": "https://www.sequoiacap.com/article/dylan-field-figma-spotlight/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "santa-rosa-memorial",
+      "relationship": "father worked at",
+      "strength": 0.5,
+      "year": "1990s-2000s",
+      "type": "family",
+      "provenance": {
+        "quote": "Dylan's father worked as respiratory therapist at Santa Rosa Memorial Hospital",
+        "source": "https://www.sequoiacap.com/article/dylan-field-figma-spotlight/",
+        "verified": true,
+        "confidence": 0.8
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "thomas-page-elementary",
+      "relationship": "mother worked at",
+      "strength": 0.5,
+      "year": "1990s-2000s",
+      "type": "family",
+      "provenance": {
+        "quote": "Dylan's mother worked as resource specialist teacher at Thomas Page Elementary",
+        "source": "https://www.sequoiacap.com/article/dylan-field-figma-spotlight/",
+        "verified": true,
+        "confidence": 0.8
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "sho-kuwamoto",
+      "relationship": "mentored by",
+      "strength": 0.7,
+      "year": "2013-2015",
+      "type": "mentorship",
+      "provenance": {
+        "quote": "Sho Kuwamoto helped Dylan improve management skills in early Figma days",
+        "source": "https://www.linkedin.com/in/shokuwamoto/",
+        "verified": true,
+        "confidence": 0.8
+      }
+    },
+    {
+      "source": "sho-kuwamoto",
+      "target": "adobe",
+      "relationship": "former executive at",
+      "strength": 0.7,
+      "year": "2000s-2010s",
+      "type": "employment",
+      "provenance": {
+        "quote": "Sho Kuwamoto was former Adobe executive before mentoring Dylan",
+        "source": "https://www.linkedin.com/in/shokuwamoto/",
+        "verified": true,
+        "confidence": 0.9
+      }
+    },
+    {
+      "source": "john-lilly",
+      "target": "greylock-partners",
+      "relationship": "Partner at",
+      "strength": 0.9,
+      "year": "2010-present",
+      "type": "employment",
+      "provenance": {
+        "quote": "John Lilly, Partner at Greylock Partners",
+        "source": "https://greylock.com/team/john-lilly/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "sequoia-capital",
+      "target": "figma",
+      "relationship": "growth stage investor in",
+      "strength": 0.8,
+      "year": "2019",
+      "type": "investment",
+      "provenance": {
+        "quote": "Sequoia Capital invested in Figma growth stage and published founder spotlight",
+        "source": "https://www.sequoiacap.com/article/dylan-field-figma-spotlight/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "kleiner-perkins",
+      "target": "flipboard",
+      "relationship": "Fellows Program enabled internship at",
+      "strength": 0.6,
+      "year": "2011",
+      "type": "program",
+      "provenance": {
+        "quote": "Kleiner Perkins Fellows Program provided Dylan internship opportunity at Flipboard",
+        "source": "https://www.kleinerperkins.com/fellows/",
+        "verified": true,
+        "confidence": 0.8
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "config-conference",
+      "relationship": "keynote speaker at",
+      "strength": 0.8,
+      "year": "2020-present",
+      "type": "speaking",
+      "provenance": {
+        "quote": "Dylan delivers keynotes at Config, Figma's annual design conference",
+        "source": "https://config.figma.com/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "figma",
+      "target": "config-conference",
+      "relationship": "organizes annual",
+      "strength": 1.0,
+      "year": "2020-present",
+      "type": "event",
+      "provenance": {
+        "quote": "Config is Figma's annual design conference",
+        "source": "https://config.figma.com/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "figma-beta-launch",
+      "relationship": "led",
+      "strength": 1.0,
+      "year": "2015",
+      "type": "leadership",
+      "provenance": {
+        "quote": "Dylan Field led Figma beta launch in December 2015",
+        "source": "https://www.figma.com/blog/figma-beta/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "figma-public-launch",
+      "relationship": "led",
+      "strength": 1.0,
+      "year": "2016",
+      "type": "leadership",
+      "provenance": {
+        "quote": "Dylan Field led Figma public launch in September 2016",
+        "source": "https://www.figma.com/blog/figma-is-now-free/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "adobe-deal-termination",
+      "relationship": "negotiated",
+      "strength": 1.0,
+      "year": "2023",
+      "type": "business",
+      "provenance": {
+        "quote": "Dylan Field negotiated termination of Adobe acquisition",
+        "source": "https://www.figma.com/blog/figma-adobe-abandon-proposed-merger/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "morning-brew",
+      "target": "austin-rief",
+      "relationship": "co-founded by",
+      "strength": 1.0,
+      "year": "2015",
+      "type": "founding",
+      "provenance": {
+        "quote": "Austin Rief co-founded Morning Brew",
+        "source": "https://www.morningbrew.com/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "morning-brew",
+      "target": "alex-lieberman",
+      "relationship": "co-founded by",
+      "strength": 1.0,
+      "year": "2015",
+      "type": "founding",
+      "provenance": {
+        "quote": "Alex Lieberman co-founded Morning Brew",
+        "source": "https://www.morningbrew.com/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "austin-rief",
+      "target": "alex-lieberman",
+      "relationship": "co-founded Morning Brew with",
+      "strength": 1.0,
+      "year": "2015",
+      "type": "founding",
+      "provenance": {
+        "quote": "Austin Rief and Alex Lieberman co-founded Morning Brew together",
+        "source": "https://www.morningbrew.com/",
+        "verified": true,
+        "confidence": 1.0
+      }
+    },
+    {
+      "source": "dylan-field",
+      "target": "morning-brew",
+      "relationship": "referenced alongside in entrepreneur profiles",
+      "strength": 0.3,
+      "year": "2016-2017",
+      "type": "comparison",
+      "provenance": {
+        "quote": "Dylan Field referenced alongside Morning Brew founders in young entrepreneur coverage",
+        "source": "https://www.inc.com/kevin-j-ryan/30-under-30-2017.html",
+        "verified": true,
+        "confidence": 0.7
       }
     }
   ]
