@@ -440,6 +440,275 @@
             .timeline-item {
                 padding: 1rem;
             }
+
+            /* Network graph mobile responsiveness */
+            .research-tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                padding: 0.75rem 1rem;
+            }
+
+            .network-controls {
+                flex-direction: column;
+            }
+
+            .control-group {
+                margin-bottom: 1rem;
+            }
+
+            #network-graph-container {
+                flex-direction: column;
+            }
+
+            .entity-panel {
+                position: static;
+                width: 100%;
+                max-height: 200px;
+            }
+        }
+
+        /* Research Tabs Styling */
+        .research-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid hsl(var(--border));
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            background: hsl(var(--background));
+            border: 1px solid hsl(var(--border));
+            border-bottom: none;
+            border-radius: var(--radius) var(--radius) 0 0;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: hsl(var(--muted-foreground));
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            top: 2px;
+        }
+
+        .tab-btn:hover {
+            background: hsl(var(--muted));
+            color: hsl(var(--foreground));
+        }
+
+        .tab-btn.active {
+            background: hsl(var(--background));
+            color: hsl(var(--primary));
+            border-color: hsl(var(--primary));
+            border-bottom: 2px solid hsl(var(--background));
+            z-index: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Network Graph Styling */
+        .network-controls {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: hsl(var(--muted));
+            border-radius: var(--radius);
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-group h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+            margin: 0;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: hsl(var(--background));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) - 2px);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: hsl(var(--foreground));
+        }
+
+        .filter-btn:hover {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+
+        .filter-btn.active {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+
+        #search-input {
+            padding: 0.5rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) - 2px);
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-size: 0.9rem;
+            width: 200px;
+        }
+
+        #search-input:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 2px hsl(var(--ring));
+        }
+
+        #timeline-slider {
+            width: 150px;
+            margin-right: 0.5rem;
+        }
+
+        #timeline-value {
+            font-weight: 600;
+            color: hsl(var(--primary));
+        }
+
+        #network-graph-container {
+            display: flex;
+            gap: 1rem;
+            height: 800px;
+        }
+
+        #network-graph {
+            flex: 1;
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            background: hsl(var(--background));
+        }
+
+        .entity-panel {
+            width: 300px;
+            padding: 1.5rem;
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            overflow-y: auto;
+            max-height: 800px;
+        }
+
+        .entity-panel h3 {
+            margin-top: 0;
+            color: hsl(var(--foreground));
+            border-bottom: 1px solid hsl(var(--border));
+            padding-bottom: 0.5rem;
+        }
+
+        .entity-info {
+            margin-bottom: 1rem;
+        }
+
+        .entity-info h4 {
+            color: hsl(var(--primary));
+            margin: 0.5rem 0 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .entity-info p {
+            margin: 0.25rem 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .provenance-sources {
+            background: hsl(var(--muted));
+            border-radius: calc(var(--radius) - 2px);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .provenance-sources h4 {
+            margin-top: 0;
+            color: hsl(var(--foreground));
+            font-size: 0.8rem;
+        }
+
+        .provenance-link {
+            display: block;
+            color: hsl(var(--primary));
+            text-decoration: none;
+            font-size: 0.75rem;
+            margin: 0.25rem 0;
+            padding: 0.25rem 0.5rem;
+            background: hsl(var(--background));
+            border-radius: calc(var(--radius) - 4px);
+            transition: background 0.2s ease;
+        }
+
+        .provenance-link:hover {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+
+        /* Node and Link Styling for D3.js */
+        .node {
+            cursor: pointer;
+            stroke-width: 2px;
+        }
+
+        .node:hover {
+            stroke-width: 3px;
+        }
+
+        .node.selected {
+            stroke: hsl(var(--primary));
+            stroke-width: 4px;
+        }
+
+        .link {
+            stroke: hsl(var(--muted-foreground));
+            stroke-opacity: 0.6;
+            fill: none;
+        }
+
+        .link.highlighted {
+            stroke: hsl(var(--primary));
+            stroke-opacity: 1;
+            stroke-width: 3px;
+        }
+
+        .node-label {
+            fill: hsl(var(--foreground));
+            font-size: 11px;
+            font-weight: 500;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .link-label {
+            fill: hsl(var(--muted-foreground));
+            font-size: 9px;
+            text-anchor: middle;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -456,6 +725,14 @@
             </div>
         </header>
 
+        <!-- Research Tabs Navigation -->
+        <div class="research-tabs">
+            <button class="tab-btn active" onclick="switchTab('research')">📄 Research</button>
+            <button class="tab-btn" onclick="switchTab('network')">🕸️ Network Graph</button>
+        </div>
+
+        <!-- Research Content Tab -->
+        <div id="research-tab" class="tab-content active">
         <div class="toc">
             <h2>Table of Contents</h2>
             <div class="toc-list">
@@ -1822,9 +2099,53 @@
             <p><strong>Total Sources Analyzed:</strong> 400+</p>
             <p><strong>Research Duration:</strong> Comprehensive multi-phase investigation</p>
         </div>
+        </div> <!-- End Research Tab -->
+
+        <!-- Network Graph Tab -->
+        <div id="network-tab" class="tab-content">
+            <div class="network-controls">
+                <div class="control-group">
+                    <h3>🔍 Search & Filter</h3>
+                    <input type="text" id="search-input" placeholder="Search entities..." onkeyup="searchEntities()">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterByType('all')">All</button>
+                        <button class="filter-btn" onclick="filterByType('person')">People</button>
+                        <button class="filter-btn" onclick="filterByType('company')">Companies</button>
+                        <button class="filter-btn" onclick="filterByType('event')">Events</button>
+                        <button class="filter-btn" onclick="filterByType('concept')">Concepts</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <h3>⏰ Timeline</h3>
+                    <input type="range" id="timeline-slider" min="2009" max="2024" value="2024" oninput="filterByYear(this.value)">
+                    <span id="timeline-value">2024</span>
+                </div>
+                <div class="control-group">
+                    <h3>⚙️ Graph Controls</h3>
+                    <button onclick="resetGraph()">Reset View</button>
+                    <button onclick="centerOnDylan()">Center Dylan</button>
+                    <button onclick="exportGraph()">Export PNG</button>
+                </div>
+            </div>
+
+            <div id="network-graph-container">
+                <svg id="network-graph"></svg>
+                <div id="entity-panel" class="entity-panel">
+                    <h3>Entity Details</h3>
+                    <div id="entity-content">
+                        <p>Click on any node to see detailed information and provenance sources.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="tooltip" id="tooltip"></div>
+
+    <!-- D3.js Library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Network Data -->
+    <script src="network-data.js"></script>
 
     <script>
         // Interactive highlighting and tooltips
@@ -1906,6 +2227,469 @@
                     document.addEventListener('click', closeHandler);
                 }, 100);
             }
+        }
+
+        // Tab Switching Functionality
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Initialize network graph when network tab is selected
+            if (tabName === 'network' && !window.networkGraphInitialized) {
+                setTimeout(() => {
+                    initializeNetworkGraph();
+                    window.networkGraphInitialized = true;
+                }, 100);
+            }
+        }
+
+        // Network Graph Variables
+        let simulation, svg, g, nodes, links, node, link, nodeLabels, linkLabels;
+        let selectedNode = null;
+        let currentFilter = 'all';
+        let currentYear = 2024;
+
+        // Initialize Network Graph
+        function initializeNetworkGraph() {
+            const container = d3.select("#network-graph");
+            const containerWidth = container.node().getBoundingClientRect().width;
+            const containerHeight = 800;
+            
+            const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+            const width = containerWidth - margin.left - margin.right;
+            const height = containerHeight - margin.top - margin.bottom;
+
+            // Clear any existing graph
+            container.selectAll("*").remove();
+
+            // Create SVG
+            svg = container
+                .attr("width", containerWidth)
+                .attr("height", containerHeight);
+
+            // Add zoom functionality
+            const zoom = d3.zoom()
+                .scaleExtent([0.1, 4])
+                .on("zoom", (event) => {
+                    g.attr("transform", event.transform);
+                });
+
+            svg.call(zoom);
+
+            // Create main group
+            g = svg.append("g");
+
+            // Process data
+            nodes = dylanFieldNetworkData.nodes.map(d => ({ ...d }));
+            links = dylanFieldNetworkData.links.map(d => ({ ...d }));
+
+            // Create force simulation
+            simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(100).strength(0.8))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide().radius(d => d.size / 2 + 10));
+
+            // Create links
+            link = g.append("g")
+                .selectAll("line")
+                .data(links)
+                .join("line")
+                .attr("class", "link")
+                .attr("stroke-width", d => Math.sqrt(d.strength * 3));
+
+            // Create link labels
+            linkLabels = g.append("g")
+                .selectAll("text")
+                .data(links)
+                .join("text")
+                .attr("class", "link-label")
+                .text(d => d.relationship);
+
+            // Create nodes
+            node = g.append("g")
+                .selectAll("circle")
+                .data(nodes)
+                .join("circle")
+                .attr("class", "node")
+                .attr("r", d => d.size / 4)
+                .attr("fill", d => d.color)
+                .attr("stroke", "#fff")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended))
+                .on("click", nodeClicked);
+
+            // Create node labels
+            nodeLabels = g.append("g")
+                .selectAll("text")
+                .data(nodes)
+                .join("text")
+                .attr("class", "node-label")
+                .text(d => d.name)
+                .attr("dy", d => d.size / 4 + 15);
+
+            // Update positions on simulation tick
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                linkLabels
+                    .attr("x", d => (d.source.x + d.target.x) / 2)
+                    .attr("y", d => (d.source.y + d.target.y) / 2);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                nodeLabels
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+
+            // Center on Dylan Field initially
+            setTimeout(() => centerOnDylan(), 1000);
+        }
+
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        // Node click handler
+        function nodeClicked(event, d) {
+            // Update selected node
+            node.classed("selected", false);
+            d3.select(event.target).classed("selected", true);
+
+            // Highlight connected links
+            link.classed("highlighted", false);
+            link.filter(l => l.source.id === d.id || l.target.id === d.id)
+                .classed("highlighted", true);
+
+            // Update entity panel
+            updateEntityPanel(d);
+
+            // Center view on selected node
+            centerOnNode(d);
+        }
+
+        // Update entity panel with node information
+        function updateEntityPanel(nodeData) {
+            const panel = document.getElementById('entity-content');
+            
+            let html = `
+                <div class="entity-info">
+                    <h4>🏷️ ${nodeData.name}</h4>
+                    <p><strong>Type:</strong> ${nodeData.type}</p>
+                    <p><strong>Category:</strong> ${nodeData.category}</p>
+            `;
+
+            // Add specific information based on type
+            if (nodeData.bio) html += `<p><strong>Bio:</strong> ${nodeData.bio}</p>`;
+            if (nodeData.description) html += `<p><strong>Description:</strong> ${nodeData.description}</p>`;
+            if (nodeData.netWorth) html += `<p><strong>Net Worth:</strong> ${nodeData.netWorth}</p>`;
+            if (nodeData.valuation) html += `<p><strong>Valuation:</strong> ${nodeData.valuation}</p>`;
+            if (nodeData.founded) html += `<p><strong>Founded:</strong> ${nodeData.founded}</p>`;
+            if (nodeData.users) html += `<p><strong>Users:</strong> ${nodeData.users}</p>`;
+
+            html += `</div>`;
+
+            // Add connected relationships
+            const connections = links.filter(l => 
+                l.source.id === nodeData.id || l.target.id === nodeData.id
+            );
+
+            if (connections.length > 0) {
+                html += `
+                    <div class="entity-info">
+                        <h4>🔗 Connections (${connections.length})</h4>
+                `;
+                
+                connections.slice(0, 8).forEach(conn => {
+                    const otherNode = conn.source.id === nodeData.id ? conn.target : conn.source;
+                    const direction = conn.source.id === nodeData.id ? '→' : '←';
+                    
+                    html += `
+                        <p>
+                            <strong>${direction} ${otherNode.name}</strong><br>
+                            <em>${conn.relationship}</em>
+                            ${conn.year ? ` (${conn.year})` : ''}
+                        </p>
+                    `;
+                });
+                
+                if (connections.length > 8) {
+                    html += `<p><em>... and ${connections.length - 8} more connections</em></p>`;
+                }
+                
+                html += `</div>`;
+            }
+
+            // Add provenance sources
+            const relevantLinks = links.filter(l => 
+                (l.source.id === nodeData.id || l.target.id === nodeData.id) && l.provenance
+            );
+
+            if (relevantLinks.length > 0) {
+                html += `
+                    <div class="provenance-sources">
+                        <h4>📚 Sources & Provenance</h4>
+                `;
+                
+                relevantLinks.slice(0, 3).forEach(link => {
+                    if (link.provenance) {
+                        html += `
+                            <a href="${link.provenance.source}" target="_blank" class="provenance-link">
+                                "${link.provenance.quote.substring(0, 80)}..."
+                                <br><small>Confidence: ${(link.provenance.confidence * 100).toFixed(0)}%</small>
+                            </a>
+                        `;
+                    }
+                });
+                
+                if (relevantLinks.length > 3) {
+                    html += `<p><em>... and ${relevantLinks.length - 3} more sources</em></p>`;
+                }
+                
+                html += `</div>`;
+            }
+
+            // Add external links
+            if (nodeData.links && nodeData.links.length > 0) {
+                html += `
+                    <div class="entity-info">
+                        <h4>🌐 External Links</h4>
+                `;
+                
+                nodeData.links.forEach(link => {
+                    const domain = new URL(link).hostname.replace('www.', '');
+                    html += `
+                        <a href="${link}" target="_blank" class="provenance-link">
+                            ${domain}
+                        </a>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+
+            panel.innerHTML = html;
+        }
+
+        // Center view on specific node
+        function centerOnNode(nodeData) {
+            const containerWidth = svg.node().getBoundingClientRect().width;
+            const containerHeight = 800;
+            
+            const scale = 1.5;
+            const x = containerWidth / 2 - nodeData.x * scale;
+            const y = containerHeight / 2 - nodeData.y * scale;
+            
+            svg.transition()
+                .duration(750)
+                .call(d3.zoom().transform, d3.zoomIdentity.translate(x, y).scale(scale));
+        }
+
+        // Filter functions
+        function filterByType(type) {
+            currentFilter = type;
+            
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            applyFilters();
+        }
+
+        function filterByYear(year) {
+            currentYear = parseInt(year);
+            document.getElementById('timeline-value').textContent = year;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            if (!node || !link) return;
+            
+            // Filter nodes
+            node.style("opacity", d => {
+                let show = true;
+                
+                // Type filter
+                if (currentFilter !== 'all' && d.type !== currentFilter) {
+                    show = false;
+                }
+                
+                // Year filter (check if entity existed in that year)
+                if (d.timeline) {
+                    const years = d.timeline.map(t => parseInt(t.split('-')[0]));
+                    const firstYear = Math.min(...years);
+                    if (firstYear > currentYear) {
+                        show = false;
+                    }
+                }
+                
+                return show ? 1 : 0.1;
+            });
+
+            // Filter node labels
+            nodeLabels.style("opacity", d => {
+                let show = true;
+                
+                if (currentFilter !== 'all' && d.type !== currentFilter) {
+                    show = false;
+                }
+                
+                if (d.timeline) {
+                    const years = d.timeline.map(t => parseInt(t.split('-')[0]));
+                    const firstYear = Math.min(...years);
+                    if (firstYear > currentYear) {
+                        show = false;
+                    }
+                }
+                
+                return show ? 1 : 0.1;
+            });
+
+            // Filter links
+            link.style("opacity", d => {
+                const sourceVisible = currentFilter === 'all' || d.source.type === currentFilter;
+                const targetVisible = currentFilter === 'all' || d.target.type === currentFilter;
+                const yearVisible = !d.year || parseInt(d.year) <= currentYear;
+                
+                return (sourceVisible && targetVisible && yearVisible) ? 0.6 : 0.1;
+            });
+
+            // Filter link labels
+            linkLabels.style("opacity", d => {
+                const sourceVisible = currentFilter === 'all' || d.source.type === currentFilter;
+                const targetVisible = currentFilter === 'all' || d.target.type === currentFilter;
+                const yearVisible = !d.year || parseInt(d.year) <= currentYear;
+                
+                return (sourceVisible && targetVisible && yearVisible) ? 1 : 0.1;
+            });
+        }
+
+        // Search function
+        function searchEntities() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (!node) return;
+            
+            if (searchTerm === '') {
+                // Reset all nodes
+                node.style("opacity", 1);
+                nodeLabels.style("opacity", 1);
+                link.style("opacity", 0.6);
+                linkLabels.style("opacity", 1);
+                return;
+            }
+            
+            // Highlight matching nodes
+            node.style("opacity", d => {
+                const matches = d.name.toLowerCase().includes(searchTerm) ||
+                              (d.bio && d.bio.toLowerCase().includes(searchTerm)) ||
+                              (d.description && d.description.toLowerCase().includes(searchTerm));
+                return matches ? 1 : 0.2;
+            });
+
+            nodeLabels.style("opacity", d => {
+                const matches = d.name.toLowerCase().includes(searchTerm) ||
+                              (d.bio && d.bio.toLowerCase().includes(searchTerm)) ||
+                              (d.description && d.description.toLowerCase().includes(searchTerm));
+                return matches ? 1 : 0.2;
+            });
+        }
+
+        // Utility functions
+        function resetGraph() {
+            if (!svg) return;
+            
+            svg.transition()
+                .duration(750)
+                .call(d3.zoom().transform, d3.zoomIdentity);
+            
+            // Reset filters
+            currentFilter = 'all';
+            currentYear = 2024;
+            document.getElementById('timeline-slider').value = 2024;
+            document.getElementById('timeline-value').textContent = '2024';
+            document.getElementById('search-input').value = '';
+            
+            // Reset filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.filter-btn').classList.add('active');
+            
+            applyFilters();
+        }
+
+        function centerOnDylan() {
+            const dylanNode = nodes ? nodes.find(n => n.id === 'dylan-field') : null;
+            if (dylanNode) {
+                centerOnNode(dylanNode);
+                
+                // Auto-select Dylan
+                setTimeout(() => {
+                    updateEntityPanel(dylanNode);
+                }, 100);
+            }
+        }
+
+        function exportGraph() {
+            if (!svg) return;
+            
+            // Simple download functionality
+            const svgData = new XMLSerializer().serializeToString(svg.node());
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            const img = new Image();
+            
+            canvas.width = svg.node().getBoundingClientRect().width;
+            canvas.height = 800;
+            
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+                const a = document.createElement("a");
+                a.download = "dylan-field-network-graph.png";
+                a.href = canvas.toDataURL("image/png");
+                a.click();
+            };
+            
+            img.src = "data:image/svg+xml;base64," + btoa(svgData);
         }
     </script>
 </body>
