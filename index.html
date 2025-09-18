@@ -4057,6 +4057,7 @@
             // Hide ALL tabs
             document.getElementById('research-tab').style.display = 'none';
             document.getElementById('network-tab').style.display = 'none';
+            document.getElementById('knowledge-graph-tab').style.display = 'none';
             document.getElementById('sources-tab').style.display = 'none';
             
             // Remove active from ALL buttons
@@ -4076,6 +4077,16 @@
                     if (typeof initializeNetworkGraph === 'function') {
                         initializeNetworkGraph();
                         window.networkGraphInitialized = true;
+                    }
+                }, 200);
+            }
+
+            // Initialize knowledge graph if needed
+            if (tabName === 'knowledge-graph') {
+                setTimeout(function() {
+                    if (typeof initializeKnowledgeGraph === 'function') {
+                        initializeKnowledgeGraph();
+                        window.knowledgeGraphInitialized = true;
                     }
                 }, 200);
             }
@@ -5545,7 +5556,7 @@
         setTimeout(() => {
             console.log("✅ Dylan Field Research Ready");
             console.log("🎯 Debug: listAllEntities(), testEntity('entity-id')");
-            initializeKnowledgeGraph();
+            // Knowledge Graph will initialize when tab is clicked
         }, 1000);
 
         // Knowledge Graph Implementation
