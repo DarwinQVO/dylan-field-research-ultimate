@@ -6864,37 +6864,65 @@
                 }
             });
 
-            // Position nodes in their spatial zones
-            const spacing = 80;
-            const radius = 120;
+            // Position nodes in their spatial zones with improved distribution
+            const baseRadius = 150;
+            const nodeSpacing = 60;
 
-            // TOP: Events (in a horizontal line above center)
-            nodesByCategory.events.forEach((node, i) => {
-                const x = centerX + (i - (nodesByCategory.events.length - 1) / 2) * spacing;
-                const y = centerY - radius - 50;
-                node.position({ x, y });
-            });
+            // Helper function for radial distribution in a zone
+            function distributeInZone(nodes, centerZoneX, centerZoneY, zoneWidth, zoneHeight) {
+                if (nodes.length === 0) return;
 
-            // LEFT: Connections (in a vertical line to the left)
-            nodesByCategory.connections.forEach((node, i) => {
-                const x = centerX - radius - 50;
-                const y = centerY + (i - (nodesByCategory.connections.length - 1) / 2) * spacing;
-                node.position({ x, y });
-            });
+                if (nodes.length === 1) {
+                    // Single node - place at zone center
+                    nodes[0].position({ x: centerZoneX, y: centerZoneY });
+                    return;
+                }
 
-            // RIGHT: Concepts (in a vertical line to the right)
-            nodesByCategory.concepts.forEach((node, i) => {
-                const x = centerX + radius + 50;
-                const y = centerY + (i - (nodesByCategory.concepts.length - 1) / 2) * spacing;
-                node.position({ x, y });
-            });
+                if (nodes.length <= 6) {
+                    // Small groups - circular arrangement
+                    const radius = Math.min(zoneWidth, zoneHeight) / 4;
+                    nodes.forEach((node, i) => {
+                        const angle = (2 * Math.PI * i) / nodes.length;
+                        const x = centerZoneX + radius * Math.cos(angle);
+                        const y = centerZoneY + radius * Math.sin(angle);
+                        node.position({ x, y });
+                    });
+                } else {
+                    // Large groups - grid arrangement in zone
+                    const cols = Math.ceil(Math.sqrt(nodes.length));
+                    const rows = Math.ceil(nodes.length / cols);
+                    const cellWidth = zoneWidth / cols;
+                    const cellHeight = zoneHeight / rows;
 
-            // BOTTOM: Data (in a horizontal line below center)
-            nodesByCategory.data.forEach((node, i) => {
-                const x = centerX + (i - (nodesByCategory.data.length - 1) / 2) * spacing;
-                const y = centerY + radius + 50;
-                node.position({ x, y });
-            });
+                    nodes.forEach((node, i) => {
+                        const col = i % cols;
+                        const row = Math.floor(i / cols);
+                        const x = centerZoneX - (zoneWidth / 2) + (col + 0.5) * cellWidth;
+                        const y = centerZoneY - (zoneHeight / 2) + (row + 0.5) * cellHeight;
+                        node.position({ x, y });
+                    });
+                }
+            }
+
+            // TOP ZONE: Events (above center)
+            const topZoneX = centerX;
+            const topZoneY = centerY - baseRadius - 80;
+            distributeInZone(nodesByCategory.events, topZoneX, topZoneY, 400, 120);
+
+            // LEFT ZONE: Connections (left of center)
+            const leftZoneX = centerX - baseRadius - 80;
+            const leftZoneY = centerY;
+            distributeInZone(nodesByCategory.connections, leftZoneX, leftZoneY, 120, 400);
+
+            // RIGHT ZONE: Concepts (right of center)
+            const rightZoneX = centerX + baseRadius + 80;
+            const rightZoneY = centerY;
+            distributeInZone(nodesByCategory.concepts, rightZoneX, rightZoneY, 120, 400);
+
+            // BOTTOM ZONE: Data (below center)
+            const bottomZoneX = centerX;
+            const bottomZoneY = centerY + baseRadius + 80;
+            distributeInZone(nodesByCategory.data, bottomZoneX, bottomZoneY, 400, 120);
 
             console.log('📍 Spatial positioning complete:', {
                 events: nodesByCategory.events.length,
