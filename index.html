@@ -587,6 +587,29 @@
             border-color: hsl(var(--primary));
         }
 
+        .focus-btn {
+            padding: 0.5rem 0.75rem;
+            margin: 0.25rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) - 2px);
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .focus-btn:hover {
+            background: hsl(var(--accent));
+            color: hsl(var(--accent-foreground));
+        }
+
+        .focus-btn.active {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+
         #search-input {
             padding: 0.5rem;
             border: 1px solid hsl(var(--border));
@@ -2772,6 +2795,14 @@
                     <button onclick="resetGraph()">Reset View</button>
                     <button onclick="exportGraph()">Export PNG</button>
                 </div>
+                <div class="control-group">
+                    <h3>🎯 Focus Mode</h3>
+                    <button id="focus-mode-btn" onclick="toggleFocusMode()" class="focus-btn">Enable Focus</button>
+                    <button onclick="resetFocus()" class="focus-btn">Show All</button>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem; color: hsl(var(--muted-foreground));">
+                        Click any node to focus on its connections only
+                    </p>
+                </div>
             </div>
 
             <div id="network-graph-container">
@@ -4150,6 +4181,12 @@
         let currentFilter = 'all';
         let currentYear = 2024;
 
+        // Focus Mode Variables
+        let focusModeEnabled = false;
+        let focusedNode = null;
+        let allNodes = [];
+        let allLinks = [];
+
         // Initialize Network Graph - SIMPLE VERSION
         function initializeNetworkGraph() {
             console.log("🚀 Initializing network graph...");
@@ -4202,6 +4239,10 @@
             // Process data
             nodes = dylanFieldNetworkData.nodes.map(d => ({ ...d }));
             links = dylanFieldNetworkData.links.map(d => ({ ...d }));
+
+            // Store original data for focus mode
+            allNodes = dylanFieldNetworkData.nodes.map(d => ({ ...d }));
+            allLinks = dylanFieldNetworkData.links.map(d => ({ ...d }));
 
             // Create force simulation with auto-stop
             simulation = d3.forceSimulation(nodes)
@@ -4322,10 +4363,15 @@
             node.classed("selected", false);
             d3.select(event.target).classed("selected", true);
 
-            // Highlight connected links
-            link.classed("highlighted", false);
-            link.filter(l => l.source.id === d.id || l.target.id === d.id)
-                .classed("highlighted", true);
+            // Focus mode functionality
+            if (focusModeEnabled) {
+                focusOnNode(d);
+            } else {
+                // Highlight connected links
+                link.classed("highlighted", false);
+                link.filter(l => l.source.id === d.id || l.target.id === d.id)
+                    .classed("highlighted", true);
+            }
 
             // Update entity panel
             updateEntityPanel(d);
@@ -5362,6 +5408,137 @@
             };
             
             img.src = "data:image/svg+xml;base64," + btoa(svgData);
+        }
+
+        // FOCUS MODE FUNCTIONS
+        function toggleFocusMode() {
+            focusModeEnabled = !focusModeEnabled;
+            const btn = document.getElementById('focus-mode-btn');
+
+            if (focusModeEnabled) {
+                btn.textContent = 'Focus Mode ON';
+                btn.classList.add('active');
+                console.log('🎯 Focus Mode ENABLED - Click any node to focus on its connections');
+            } else {
+                btn.textContent = 'Enable Focus';
+                btn.classList.remove('active');
+                resetFocus();
+                console.log('🎯 Focus Mode DISABLED');
+            }
+        }
+
+        function focusOnNode(targetNode) {
+            console.log(`🎯 Focusing on: ${targetNode.name}`);
+            focusedNode = targetNode;
+
+            // Find all connected nodes (1-hop neighbors)
+            const connectedNodeIds = new Set([targetNode.id]);
+            const connectedLinks = [];
+
+            // Get all links connected to the target node
+            allLinks.forEach(link => {
+                if (link.source.id === targetNode.id || link.target.id === targetNode.id) {
+                    connectedLinks.push(link);
+                    // Add the other node in the connection
+                    const otherId = link.source.id === targetNode.id ? link.target.id : link.source.id;
+                    connectedNodeIds.add(otherId);
+                }
+            });
+
+            // Filter nodes and links to show only connected ones
+            const focusedNodes = allNodes.filter(node => connectedNodeIds.has(node.id));
+
+            console.log(`📊 Focus results: ${focusedNodes.length} nodes, ${connectedLinks.length} links`);
+
+            // Update the graph with focused data
+            updateGraphWithFocusedData(focusedNodes, connectedLinks, targetNode);
+        }
+
+        function updateGraphWithFocusedData(focusedNodes, focusedLinks, centerNode) {
+            // Update nodes
+            nodes = focusedNodes.map(d => ({ ...d }));
+            links = focusedLinks.map(d => ({ ...d }));
+
+            // Update simulation with new data
+            simulation.nodes(nodes);
+            simulation.force("link").links(links);
+
+            // Update visual elements
+            node = node.data(nodes, d => d.id);
+            node.exit().remove();
+            node = node.enter()
+                .append("circle")
+                .attr("class", "node")
+                .attr("r", d => Math.max(d.size / 3, 15))
+                .attr("fill", d => d.color)
+                .attr("stroke", "#fff")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended))
+                .on("click", nodeClicked)
+                .on("mouseover", function(event, d) {
+                    showNodeTooltip(event, d);
+                })
+                .on("mouseout", function(event, d) {
+                    hideNodeTooltip();
+                })
+                .merge(node);
+
+            // Update links
+            link = link.data(links, d => d.id);
+            link.exit().remove();
+            link = link.enter()
+                .append("line")
+                .attr("class", "link")
+                .attr("stroke-width", d => Math.max(Math.sqrt(d.strength * 3), 2))
+                .merge(link);
+
+            // Update labels
+            nodeLabels = nodeLabels.data(nodes, d => d.id);
+            nodeLabels.exit().remove();
+            nodeLabels = nodeLabels.enter()
+                .append("text")
+                .attr("class", "node-label")
+                .text(d => d.name)
+                .attr("dy", d => d.size / 4 + 15)
+                .merge(nodeLabels);
+
+            linkLabels = linkLabels.data(links, d => d.id);
+            linkLabels.exit().remove();
+            linkLabels = linkLabels.enter()
+                .append("text")
+                .attr("class", "link-label")
+                .text(d => d.relationship)
+                .merge(linkLabels);
+
+            // Restart simulation
+            simulation.alpha(0.3).restart();
+
+            // Center on the focused node after a short delay
+            setTimeout(() => {
+                if (centerNode) {
+                    centerOnNode(centerNode);
+                }
+            }, 500);
+        }
+
+        function resetFocus() {
+            console.log('🔄 Resetting focus - showing all nodes');
+            focusedNode = null;
+
+            // Restore original data
+            nodes = allNodes.map(d => ({ ...d }));
+            links = allLinks.map(d => ({ ...d }));
+
+            // Update the graph with all data
+            updateGraphWithFocusedData(nodes, links, null);
+
+            // Update UI
+            const btn = document.getElementById('focus-mode-btn');
+            btn.classList.remove('active');
+            btn.textContent = 'Enable Focus';
+            focusModeEnabled = false;
         }
 
         // GLOBAL CENTERING HELPERS - Available in browser console
