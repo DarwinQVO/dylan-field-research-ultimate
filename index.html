@@ -6826,6 +6826,11 @@
             const centerX = containerRect.width / 2;
             const centerY = containerRect.height / 2;
 
+            // Calculate optimal space requirements
+            const containerWidth = containerRect.width;
+            const containerHeight = containerRect.height;
+            const minPadding = 60;
+
             // Position center node
             const centerNodeElement = kgCy.getElementById(centerNodeData.id);
             centerNodeElement.position({ x: centerX, y: centerY });
@@ -6864,12 +6869,70 @@
                 }
             });
 
-            // Position nodes in their spatial zones with improved distribution
-            const baseRadius = 150;
-            const nodeSpacing = 60;
+            // Calculate optimal zone sizes based on node count
+            const totalNodes = Object.values(nodesByCategory).reduce((sum, arr) => sum + arr.length, 0);
+            const nodeSize = 40; // Average node visual size
+            const nodeSpacing = 20; // Minimum space between nodes
 
-            // Helper function for radial distribution in a zone
-            function distributeInZone(nodes, centerZoneX, centerZoneY, zoneWidth, zoneHeight) {
+            // Dynamic zone sizing calculation
+            function calculateOptimalZoneSize(nodeCount, containerDim, isHorizontal) {
+                if (nodeCount === 0) return { width: 100, height: 100 };
+
+                const availableSpace = containerDim - (2 * minPadding) - 200; // Reserve center space
+
+                if (nodeCount === 1) {
+                    return { width: nodeSize + 40, height: nodeSize + 40 };
+                }
+
+                if (nodeCount <= 6) {
+                    // Circular arrangement
+                    const radius = Math.max(60, (nodeCount * nodeSize) / (2 * Math.PI));
+                    const diameter = radius * 2 + nodeSize + 40;
+                    return { width: diameter, height: diameter };
+                }
+
+                // Grid arrangement
+                const cols = Math.ceil(Math.sqrt(nodeCount));
+                const rows = Math.ceil(nodeCount / cols);
+
+                const gridWidth = cols * (nodeSize + nodeSpacing) + nodeSpacing;
+                const gridHeight = rows * (nodeSize + nodeSpacing) + nodeSpacing;
+
+                // Limit to available space but ensure readability
+                if (isHorizontal) {
+                    return {
+                        width: Math.min(gridWidth, availableSpace * 0.8),
+                        height: Math.min(gridHeight, 150)
+                    };
+                } else {
+                    return {
+                        width: Math.min(gridWidth, 150),
+                        height: Math.min(gridHeight, availableSpace * 0.8)
+                    };
+                }
+            }
+
+            // Calculate zone sizes
+            const topZoneSize = calculateOptimalZoneSize(nodesByCategory.events.length, containerWidth, true);
+            const leftZoneSize = calculateOptimalZoneSize(nodesByCategory.connections.length, containerHeight, false);
+            const rightZoneSize = calculateOptimalZoneSize(nodesByCategory.concepts.length, containerHeight, false);
+            const bottomZoneSize = calculateOptimalZoneSize(nodesByCategory.data.length, containerWidth, true);
+
+            // Calculate optimal distances from center
+            const topDistance = Math.max(80, topZoneSize.height / 2 + 40);
+            const leftDistance = Math.max(80, leftZoneSize.width / 2 + 40);
+            const rightDistance = Math.max(80, rightZoneSize.width / 2 + 40);
+            const bottomDistance = Math.max(80, bottomZoneSize.height / 2 + 40);
+
+            console.log('📏 Dynamic zone sizing:', {
+                events: `${topZoneSize.width}x${topZoneSize.height} (${nodesByCategory.events.length} nodes)`,
+                connections: `${leftZoneSize.width}x${leftZoneSize.height} (${nodesByCategory.connections.length} nodes)`,
+                concepts: `${rightZoneSize.width}x${rightZoneSize.height} (${nodesByCategory.concepts.length} nodes)`,
+                data: `${bottomZoneSize.width}x${bottomZoneSize.height} (${nodesByCategory.data.length} nodes)`
+            });
+
+            // Enhanced distribution with dynamic sizing
+            function distributeInOptimalZone(nodes, centerZoneX, centerZoneY, zoneWidth, zoneHeight) {
                 if (nodes.length === 0) return;
 
                 if (nodes.length === 1) {
@@ -6879,8 +6942,8 @@
                 }
 
                 if (nodes.length <= 6) {
-                    // Small groups - circular arrangement
-                    const radius = Math.min(zoneWidth, zoneHeight) / 4;
+                    // Small groups - circular arrangement with optimal radius
+                    const radius = Math.min(zoneWidth, zoneHeight) / 3;
                     nodes.forEach((node, i) => {
                         const angle = (2 * Math.PI * i) / nodes.length;
                         const x = centerZoneX + radius * Math.cos(angle);
@@ -6888,41 +6951,51 @@
                         node.position({ x, y });
                     });
                 } else {
-                    // Large groups - grid arrangement in zone
+                    // Large groups - optimized grid with proper spacing
                     const cols = Math.ceil(Math.sqrt(nodes.length));
                     const rows = Math.ceil(nodes.length / cols);
-                    const cellWidth = zoneWidth / cols;
-                    const cellHeight = zoneHeight / rows;
+
+                    // Calculate cell sizes with padding
+                    const cellWidth = (zoneWidth - 20) / cols;
+                    const cellHeight = (zoneHeight - 20) / rows;
 
                     nodes.forEach((node, i) => {
                         const col = i % cols;
                         const row = Math.floor(i / cols);
-                        const x = centerZoneX - (zoneWidth / 2) + (col + 0.5) * cellWidth;
-                        const y = centerZoneY - (zoneHeight / 2) + (row + 0.5) * cellHeight;
+
+                        // Center the grid within the zone
+                        const gridStartX = centerZoneX - (zoneWidth / 2) + 10;
+                        const gridStartY = centerZoneY - (zoneHeight / 2) + 10;
+
+                        const x = gridStartX + (col + 0.5) * cellWidth;
+                        const y = gridStartY + (row + 0.5) * cellHeight;
+
                         node.position({ x, y });
                     });
                 }
             }
 
+            // DYNAMIC ZONE POSITIONING with calculated optimal sizes
+
             // TOP ZONE: Events (above center)
             const topZoneX = centerX;
-            const topZoneY = centerY - baseRadius - 80;
-            distributeInZone(nodesByCategory.events, topZoneX, topZoneY, 400, 120);
+            const topZoneY = centerY - topDistance;
+            distributeInOptimalZone(nodesByCategory.events, topZoneX, topZoneY, topZoneSize.width, topZoneSize.height);
 
             // LEFT ZONE: Connections (left of center)
-            const leftZoneX = centerX - baseRadius - 80;
+            const leftZoneX = centerX - leftDistance;
             const leftZoneY = centerY;
-            distributeInZone(nodesByCategory.connections, leftZoneX, leftZoneY, 120, 400);
+            distributeInOptimalZone(nodesByCategory.connections, leftZoneX, leftZoneY, leftZoneSize.width, leftZoneSize.height);
 
             // RIGHT ZONE: Concepts (right of center)
-            const rightZoneX = centerX + baseRadius + 80;
+            const rightZoneX = centerX + rightDistance;
             const rightZoneY = centerY;
-            distributeInZone(nodesByCategory.concepts, rightZoneX, rightZoneY, 120, 400);
+            distributeInOptimalZone(nodesByCategory.concepts, rightZoneX, rightZoneY, rightZoneSize.width, rightZoneSize.height);
 
             // BOTTOM ZONE: Data (below center)
             const bottomZoneX = centerX;
-            const bottomZoneY = centerY + baseRadius + 80;
-            distributeInZone(nodesByCategory.data, bottomZoneX, bottomZoneY, 400, 120);
+            const bottomZoneY = centerY + bottomDistance;
+            distributeInOptimalZone(nodesByCategory.data, bottomZoneX, bottomZoneY, bottomZoneSize.width, bottomZoneSize.height);
 
             console.log('📍 Spatial positioning complete:', {
                 events: nodesByCategory.events.length,
@@ -6931,10 +7004,21 @@
                 data: nodesByCategory.data.length
             });
 
-            // Fit view to show organized layout
+            // Intelligent auto-fit with optimal padding
             setTimeout(() => {
-                kgCy.fit(kgCy.nodes(':visible'), 50);
-            }, 100);
+                // Calculate total layout bounds
+                const maxDistance = Math.max(topDistance + topZoneSize.height/2,
+                                           leftDistance + leftZoneSize.width/2,
+                                           rightDistance + rightZoneSize.width/2,
+                                           bottomDistance + bottomZoneSize.height/2);
+
+                // Calculate optimal padding for perfect visualization
+                const optimalPadding = Math.min(80, Math.max(30, (containerWidth / maxDistance) * 20));
+
+                console.log(`🔍 Auto-fitting with padding: ${optimalPadding}px for max distance: ${maxDistance}px`);
+
+                kgCy.fit(kgCy.nodes(':visible'), optimalPadding);
+            }, 200);
         }
 
         function resetForcedOrganizing() {
