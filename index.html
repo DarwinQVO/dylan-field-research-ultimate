@@ -5437,10 +5437,14 @@
 
             // Get all links connected to the target node
             allLinks.forEach(link => {
-                if (link.source.id === targetNode.id || link.target.id === targetNode.id) {
+                // Handle both string and object formats for source/target
+                const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+                const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+
+                if (sourceId === targetNode.id || targetId === targetNode.id) {
                     connectedLinks.push(link);
                     // Add the other node in the connection
-                    const otherId = link.source.id === targetNode.id ? link.target.id : link.source.id;
+                    const otherId = sourceId === targetNode.id ? targetId : sourceId;
                     connectedNodeIds.add(otherId);
                 }
             });
@@ -5449,6 +5453,7 @@
             const focusedNodes = allNodes.filter(node => connectedNodeIds.has(node.id));
 
             console.log(`📊 Focus results: ${focusedNodes.length} nodes, ${connectedLinks.length} links`);
+            console.log(`🎯 Connected node IDs:`, Array.from(connectedNodeIds));
 
             // Update the graph with focused data
             updateGraphWithFocusedData(focusedNodes, connectedLinks, targetNode);
