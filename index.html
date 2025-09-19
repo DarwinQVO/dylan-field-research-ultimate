@@ -3245,6 +3245,24 @@
                         </div>
                     </div>
 
+                    <div class="kg-filter-group">
+                        <div class="kg-filter-title">🎯 Forced Organizing</div>
+                        <button id="kg-forced-mode-btn" onclick="toggleForcedOrganizing()" class="kg-control-btn" style="width: 100%; margin-bottom: 0.5rem;">
+                            Enable Forced Mode
+                        </button>
+                        <button onclick="resetForcedOrganizing()" class="kg-control-btn" style="width: 100%; margin-bottom: 0.5rem;">
+                            Reset Layout
+                        </button>
+                        <div style="font-size: 0.75rem; color: hsl(var(--muted-foreground)); margin-top: 0.5rem;">
+                            <div><strong>📍 Spatial Layout:</strong></div>
+                            <div>⬆️ Events/Timeline</div>
+                            <div>⬅️ Connections</div>
+                            <div>🎯 Center Node</div>
+                            <div>➡️ Concepts/Metrics</div>
+                            <div>⬇️ Sources/Data</div>
+                        </div>
+                    </div>
+
                     <div class="kg-legend">
                         <div class="kg-legend-title">Legend</div>
                         <div class="kg-legend-item">
@@ -5744,6 +5762,18 @@
         // Knowledge Graph Implementation
         let kgCy = null;
 
+        // Forced Organizing Variables
+        let forcedOrganizerEnabled = false;
+        let centerNode = null;
+        let originalGraphData = [];
+        let spatialLayout = {
+            center: { x: 0, y: 0 },
+            events: { x: 0, y: -200 },      // TOP: Events/Timeline
+            connections: { x: -200, y: 0 }, // LEFT: Connections/Relationships
+            concepts: { x: 200, y: 0 },     // RIGHT: Concepts/Metrics
+            data: { x: 0, y: 200 }          // BOTTOM: Sources/Data
+        };
+
         function initializeKnowledgeGraph() {
             console.log('🚀 Starting Knowledge Graph from scratch...');
 
@@ -6211,6 +6241,9 @@
             ];
 
             try {
+                // Store original data for Forced Organizing
+                originalGraphData = [...graphData];
+
                 kgCy = cytoscape({
                     container: container,
                     elements: graphData,
@@ -6555,6 +6588,13 @@
                 // Rich multi-layer event handlers
                 kgCy.on('tap', 'node', function() {
                     const data = this.data();
+
+                    // Forced Organizing functionality
+                    if (forcedOrganizerEnabled) {
+                        applyForcedOrganizing(data);
+                        return;
+                    }
+
                     const infoPanel = document.getElementById('kg-info-panel');
                     const infoContent = document.getElementById('kg-info-content');
 
@@ -6716,6 +6756,186 @@
             });
 
             console.log('✅ Knowledge Graph filters setup complete');
+        }
+
+        // FORCED ORGANIZING FUNCTIONS
+        function toggleForcedOrganizing() {
+            forcedOrganizerEnabled = !forcedOrganizerEnabled;
+            const btn = document.getElementById('kg-forced-mode-btn');
+
+            if (forcedOrganizerEnabled) {
+                btn.textContent = '🎯 Forced Mode ON';
+                btn.style.background = 'hsl(var(--primary))';
+                btn.style.color = 'hsl(var(--primary-foreground))';
+                console.log('🎯 Forced Organizing ENABLED - Click any node to force center');
+            } else {
+                btn.textContent = 'Enable Forced Mode';
+                btn.style.background = 'hsl(var(--background))';
+                btn.style.color = 'hsl(var(--foreground))';
+                resetForcedOrganizing();
+                console.log('🎯 Forced Organizing DISABLED');
+            }
+        }
+
+        function applyForcedOrganizing(centerNodeData) {
+            console.log(`🎯 Forcing organization around: ${centerNodeData.label}`);
+            centerNode = centerNodeData;
+
+            // Find all connected nodes (ego network)
+            const connectedNodeIds = new Set([centerNodeData.id]);
+            const connectedEdges = [];
+
+            // Get all edges connected to the center node
+            kgCy.edges().forEach(edge => {
+                const edgeData = edge.data();
+                if (edgeData.source === centerNodeData.id || edgeData.target === centerNodeData.id) {
+                    connectedEdges.push(edgeData);
+                    // Add the other node in the connection
+                    const otherId = edgeData.source === centerNodeData.id ? edgeData.target : edgeData.source;
+                    connectedNodeIds.add(otherId);
+                }
+            });
+
+            console.log(`📊 Ego network: ${connectedNodeIds.size} nodes, ${connectedEdges.length} edges`);
+
+            // Hide unconnected nodes and edges
+            kgCy.nodes().forEach(node => {
+                const nodeData = node.data();
+                if (!connectedNodeIds.has(nodeData.id)) {
+                    node.style('display', 'none');
+                }
+            });
+
+            kgCy.edges().forEach(edge => {
+                const edgeData = edge.data();
+                if (!connectedNodeIds.has(edgeData.source) || !connectedNodeIds.has(edgeData.target)) {
+                    edge.style('display', 'none');
+                }
+            });
+
+            // Apply spatial layout organization
+            applySpatialLayout(centerNodeData, connectedNodeIds);
+        }
+
+        function applySpatialLayout(centerNodeData, connectedNodeIds) {
+            console.log('🎨 Applying spatial layout organization...');
+
+            // Get container dimensions
+            const container = document.getElementById('kg-cy');
+            const containerRect = container.getBoundingClientRect();
+            const centerX = containerRect.width / 2;
+            const centerY = containerRect.height / 2;
+
+            // Position center node
+            const centerNodeElement = kgCy.getElementById(centerNodeData.id);
+            centerNodeElement.position({ x: centerX, y: centerY });
+
+            // Categorize and position connected nodes by type and layer
+            const nodesByCategory = {
+                events: [],      // TOP: Shape instances, events
+                connections: [], // LEFT: Personal, business relationships
+                concepts: [],    // RIGHT: Companies, products, concepts
+                data: []         // BOTTOM: Sources, excerpts, claims, facts
+            };
+
+            // Categorize nodes
+            kgCy.nodes().forEach(node => {
+                const nodeData = node.data();
+                if (nodeData.id === centerNodeData.id || !connectedNodeIds.has(nodeData.id)) {
+                    return; // Skip center node and unconnected nodes
+                }
+
+                // Categorize by type and layer
+                if (nodeData.type === 'shape_instance' || (nodeData.type === 'entity' && nodeData.details?.includes('Event'))) {
+                    nodesByCategory.events.push(node);
+                } else if (nodeData.type === 'entity' && (nodeData.details?.includes('Person') || nodeData.details?.includes('relationship'))) {
+                    nodesByCategory.connections.push(node);
+                } else if (nodeData.type === 'entity' && (nodeData.details?.includes('Company') || nodeData.details?.includes('Product'))) {
+                    nodesByCategory.concepts.push(node);
+                } else if (nodeData.type === 'source' || nodeData.type === 'excerpt' || nodeData.type === 'claim' || nodeData.type === 'fact') {
+                    nodesByCategory.data.push(node);
+                } else {
+                    // Default categorization
+                    if (nodeData.layer <= 3) {
+                        nodesByCategory.data.push(node);
+                    } else {
+                        nodesByCategory.concepts.push(node);
+                    }
+                }
+            });
+
+            // Position nodes in their spatial zones
+            const spacing = 80;
+            const radius = 120;
+
+            // TOP: Events (in a horizontal line above center)
+            nodesByCategory.events.forEach((node, i) => {
+                const x = centerX + (i - (nodesByCategory.events.length - 1) / 2) * spacing;
+                const y = centerY - radius - 50;
+                node.position({ x, y });
+            });
+
+            // LEFT: Connections (in a vertical line to the left)
+            nodesByCategory.connections.forEach((node, i) => {
+                const x = centerX - radius - 50;
+                const y = centerY + (i - (nodesByCategory.connections.length - 1) / 2) * spacing;
+                node.position({ x, y });
+            });
+
+            // RIGHT: Concepts (in a vertical line to the right)
+            nodesByCategory.concepts.forEach((node, i) => {
+                const x = centerX + radius + 50;
+                const y = centerY + (i - (nodesByCategory.concepts.length - 1) / 2) * spacing;
+                node.position({ x, y });
+            });
+
+            // BOTTOM: Data (in a horizontal line below center)
+            nodesByCategory.data.forEach((node, i) => {
+                const x = centerX + (i - (nodesByCategory.data.length - 1) / 2) * spacing;
+                const y = centerY + radius + 50;
+                node.position({ x, y });
+            });
+
+            console.log('📍 Spatial positioning complete:', {
+                events: nodesByCategory.events.length,
+                connections: nodesByCategory.connections.length,
+                concepts: nodesByCategory.concepts.length,
+                data: nodesByCategory.data.length
+            });
+
+            // Fit view to show organized layout
+            setTimeout(() => {
+                kgCy.fit(kgCy.nodes(':visible'), 50);
+            }, 100);
+        }
+
+        function resetForcedOrganizing() {
+            console.log('🔄 Resetting forced organizing - showing all nodes');
+            centerNode = null;
+
+            // Show all nodes and edges
+            kgCy.nodes().style('display', 'element');
+            kgCy.edges().style('display', 'element');
+
+            // Reset to original layout
+            kgCy.layout({
+                name: 'cose',
+                animate: true,
+                fit: true,
+                padding: 80,
+                nodeRepulsion: function(node){ return 8000; },
+                idealEdgeLength: function(edge){ return 150; },
+                numIter: 500
+            }).run();
+
+            // Update UI
+            const btn = document.getElementById('kg-forced-mode-btn');
+            btn.textContent = 'Enable Forced Mode';
+            btn.style.background = 'hsl(var(--background))';
+            btn.style.color = 'hsl(var(--foreground))';
+            forcedOrganizerEnabled = false;
+
+            console.log('✅ Forced organizing reset complete');
         }
     </script>
 </body>
